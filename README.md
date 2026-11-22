@@ -12,12 +12,12 @@
 | `work-booking.html` | 案例 01：預約修改流程設計（A／B 互動原型、測試規劃、修改紀錄） |
 | `work-fridge.html` | 案例 02：共享冰箱資訊辨識（情境模擬、標籤方案、正式研究規劃） |
 | `work-site.html` | 案例 03：個人網站視覺與互動系統（設計系統、c 型連續圓角、動效規格、無障礙、測試） |
-| `process.html` | 版本時間軸、除錯紀錄（30 筆）、測試紀錄、AI 協作分工 |
+| `process.html` | 版本時間軸、除錯紀錄（32 筆）、測試紀錄、AI 協作分工 |
 
 ## 技術
 
 - 靜態網站，每頁一個 HTML 檔：CSS、JavaScript 與圖片都內嵌在檔案裡，不使用框架，也沒有建置步驟。
-- c 型連續圓角：JavaScript 依每個元件的實際像素尺寸產生 `clip-path: path()`，尺寸改變時才重算（說明見 `work-site.html#radius`）。
+- c 型連續圓角：JavaScript 依每個元件的實際像素尺寸產生 `clip-path: path()`，尺寸改變時才重算（說明見 `work-site.html#radius`）。會展開收合的大型卡片，輪廓畫在內容後方的底層，不裁切整張卡片。
 - 部署：GitHub Pages，`main` 分支根目錄。
 
 ## 研究與測試狀態
@@ -27,16 +27,17 @@
 - 預約原型：原型完成，**尚未進行使用者測試**；網站上沒有任何測試數據。
 - 冰箱案例：情境推演與劇本式模擬（未標記時第三盒才找到是預設規則），**不是實際測試結果**。
 - 四篇 UX 學習報告：以「情境重構」寫成的生活故事，用來呈現設計問題，**不是正式使用者研究紀錄**；插圖為設計示意。
-- 自動化測試：Playwright（Chromium）。實機測試：iPhone Safari（V1–V12，由 Lucius 錄影回報）；V2.0 待實機驗收；iPad Safari、Android Chrome、macOS Safari、Edge 尚未測試。
+- 自動化測試：Playwright（Chromium）。實機測試：iPhone Safari（V1–V12，由 Lucius 錄影回報）；V2.2 待實機驗收；iPad Safari、Android Chrome、macOS Safari、Edge 尚未測試。
 - Core Web Vitals 尚未量測。
 
 ## 測試
 
-`tests/` 內是 V2.0 使用的兩個檢查程式（需要 Python 3 與 Playwright）：
+`tests/` 內是 V2.0 起使用的檢查程式（需要 Python 3 與 Playwright）：
 
 - `tests/motion_diff.py old.html new.html`：從兩個版本讀出所有 transition、animation、@keyframes 與 JavaScript 動畫設定，逐項比對。V2.0 的結果：187 項全部相同。
 - `tests/v2_test.py index.html`：預約狀態與操作紀錄、練習計分與重設、鍵盤與焦點、對話框等 100 項功能測試。
 - `tests/v21_test.py index.html`：導覽重新出現的位置、答案文字對比、報告複製連結、故事結構等 21 項（V2.1）。
+- `tests/v22_test.py index.html`：陰影空間、展開收合時輪廓逐格同步、版面與點擊範圍不變、預約選單等 46 項（V2.2）。
 
 ## 協作
 
@@ -44,4 +45,4 @@
 
 ## 動效保護原則
 
-V2.0 與 V2.1 只修改內容、資訊架構、功能邏輯與無障礙，不更動任何既有動效（持續時間、曲線、模糊、位移、c 型圓角、展開收合、觸發時機）。
+V2.0–V2.2 只修改內容、資訊架構、功能邏輯、無障礙與效能，不更動任何既有動效（持續時間、曲線、模糊、位移、c 型圓角、展開收合、觸發時機）。效能優化的原則是讓同樣的動效更順，不是刪掉動效：例如陰影的模糊改為只算一次、畫面外看不到的段落不做過渡。
