@@ -205,8 +205,8 @@ async def static(pg):
     chk('new cards / tags use the c-type corner', sq)
     sim = await pg.evaluate("document.querySelector('.fd').innerText")
     chk('fridge demo labelled as simulation', '情境模擬' in sim and '並非真實使用者測試結果' in sim)
-    r4 = await pg.evaluate("document.querySelector('#report-4 .rs2').innerText")
-    chk('report 4: simulated vs real results in separate fields', '模擬結果' in r4 and '實測結果' in r4 and '尚未進行' in r4)
+    lab = await pg.evaluate("(document.querySelector('#research .rlab')||{}).textContent||''")
+    chk('reports: one 情境重構 label at the top', lab.startswith('情境重構'), lab)
 
 async def main():
     async with async_playwright() as p:
