@@ -483,6 +483,43 @@ footer .fl{display:flex;flex-wrap:wrap;gap:6px 16px}
 .sk .tp{fill:#3a2f1c}
 .sk .tp2{fill:#6b5a3a}
 
+/* ===== V2.2 ===== */
+/* 陰影完整呈現：每一層模糊陰影都完整落在自己的方框內，而它的外層方框也完整包住它。
+   Safari 在某些狀態下（例如元件剛浮現、仍是獨立圖層時）只重繪外層方框以內的範圍，方框外的陰影就被切成直角；
+   改為「外層預留陰影空間＋負邊距抵銷」，版面位置、陰影大小與模糊程度都不變。 */
+.qzw{--qg:22px;padding:44px var(--qg) 64px;margin:-22px calc(-1 * var(--qg)) -64px;pointer-events:none}
+.qzw>.qz{pointer-events:auto}
+.sqsh{inset:0}
+.sqsh b{inset:54px calc(var(--qg) + 10px)}
+.avw{--ap:14px;padding:14px var(--ap) 17px;margin:-14px calc(-1 * var(--ap)) -17px;pointer-events:none}
+.avw>#av{pointer-events:auto}
+.avsh{inset:3px 0 0}
+.avsh b{inset:14px var(--ap)}
+/* 左右預留的空間不超過該寬度下的頁面邊距（22／16／12px），不會產生橫向捲動 */
+@media (max-width:360px){.qzw{--qg:16px}}
+@media (max-width:300px){.qzw{--qg:12px}.avw{--ap:12px}}
+#menu{padding:33px 33px 41px;margin:-33px -33px -41px;min-width:calc(190px + 66px);transform-origin:calc(100% - 33px) calc(100% - 41px)}
+#menu.open{pointer-events:none}
+#menu.open .mi{pointer-events:auto}
+.msh,.msh.t{inset:0}
+.msh b{inset:41px 33px 33px}
+.msh.t b{inset:34px 33px 40px}
+/* 題卡陰影：同一個模糊只算一次並存成圖片，卡片長高時只拉伸中段（圖片無法產生時，維持原本即時模糊的陰影） */
+.sqsh.img{filter:none}
+.sqsh.img>b{display:none}
+/* 展開／收合時圓角不延遲：大型卡片的 c 型輪廓畫在內容後方的底層，不再裁切整張卡片。
+   被裁切的卡片若有子元素正在動畫，Chrome 必須另建遮罩圖層並逐格重繪，遮罩來不及時那一格的角就是方的；底層形狀沒有這個問題。
+   輪廓幾何、尺寸與每一格的同步方式都不變。 */
+.sqb{position:absolute;inset:0;z-index:-1;pointer-events:none;background:var(--cd)}
+.sq [data-sqb]{background:transparent!important;isolation:isolate}
+/* 題卡標題區只在深色模式有底色（需要與卡片相同的 c 型上緣）；淺色模式沒有底色，不裁切，底線維持原樣 */
+@media (prefers-color-scheme:light){.sq .qh{clip-path:none!important}}
+/* 報告展開／收合：整段動畫期間都在畫面外的段落不做（看不到的）過渡，畫面內的段落動效完全不變 */
+.rp .bd>.nt{transition:none!important}
+/* 題卡的 c 型細線放進底層形狀裡：同樣的輪廓、同樣的顏色，但不再疊在動畫內容上方，不必另建遮罩圖層 */
+.sqb>.rg{opacity:1;background:rgba(0,0,0,.06)}
+@media (prefers-color-scheme:dark){.sqb>.rg{background:rgba(255,255,255,.07)}}
+
 /* ===== 案例頁（沿用首頁設計系統；靜態樣式，不含任何動效） ===== */
 .hb>b a{color:inherit}
 .cs h1{font-size:clamp(40px,8.6vw,84px)}
@@ -598,15 +635,15 @@ const SQ=(()=>{const A=0.18977,B=0.40455,QX=0.58895,QY=0.08722,RH=0.6797,K=1.2,n
 C=(x,y,e,ux,uy)=>{const vx=-uy,vy=ux,p=(a,b)=>n(x+e*(a*ux+b*vx))+' '+n(y+e*(a*uy+b*vy));return`C${p(A,0)} ${p(B,0)} ${p(QX,QY)}A${n(e*RH)} ${n(e*RH)} 0 0 1 ${p(1-QY,1-QX)}C${p(1,1-B)} ${p(1,1-A)} ${p(1,1)}`},
 P=(w,h,ex,t=0)=>{const m=Math.min(w,h)/2,[e0,e1,e2,e3]=ex.map(v=>Math.max(0,Math.min(v,m)-t)),x0=t,y0=t,x1=w-t,y1=h-t;return`M${n(x1-e1)} ${n(y0)}${C(x1-e1,y0,e1,1,0)}L${n(x1)} ${n(y1-e2)}${C(x1,y1-e2,e2,0,1)}L${n(x0+e3)} ${n(y1)}${C(x0+e3,y1,e3,-1,0)}L${n(x0)} ${n(y0+e0)}${C(x0,y0+e0,e0,0,-1)}Z`},
 // [選擇器, 原圓角(px，單值或四角), 環狀外框粗細(px，選填)]
-L=[['#av',16,1],['#zi',32],['#zs i',33],['#zr',32,1],['.msh b',18],['.avsh b',16],['.fc',20,2,1],['.qz',32,1,1],['.sqsh b',32,0,1],['.ch button',18,0,.5],['.kc',24,0,1],['.kc i',99],['.dc',30,0,1],['.chip',14],['.seg',18,0,.5],['.ph',28,0,1],['.ph .hd em',8],['.mi',18],['#menu button',12],['.rp',26,0,.5],['.rh i',99],['.fd',28],['.cp',24],['.tc',14,1],['.bs',20,2],['.lid',22],['.lp',15],['.tr',13],['.lid em',3],['.btn',99],['.ab',99],['.tabs',99],['.sg',2],['.cps .tkb',2],['.tg',8],['.shot',24,1,1],['.cbx',24,0,1],['.sw',8,1]],
+L=[['#av',16,1],['#zi',32],['#zs i',33],['#zr',32,1],['.msh b',18],['.avsh b',16],['.fc',20,2,1],['.qz',32,1,1,'b'],['.qh',[32,32,0,0],0,1,0,2],['.sqsh b',32,0,1],['.ch button',18,0,.5],['.kc',24,0,1],['.kc i',99],['.dc',30,0,1,'b'],['.chip',14],['.seg',18,0,.5],['.ph',28,0,1,'b'],['.ph .hd em',8],['.mi',18],['#menu button',12],['.rp',26,0,.5,'b'],['.rh i',99],['.fd',28],['.cp',24],['.tc',14,1],['.bs',20,2],['.lid',22],['.lp',15],['.tr',13],['.lid em',3],['.btn',99],['.ab',99],['.tabs',99],['.sg',2],['.cps .tkb',2],['.tg',8],['.shot',24,1,1],['.cbx',24,0,1],['.sw',8,1]],
 on=CSS.supports('clip-path','path("M0 0Z")'),
 // 電腦版：視窗 ≥ 820px 起，大面積元件的 c 型圓角隨寬度連續放大（最多 1.3 倍）；手機寬度維持原樣
 dsf=()=>innerWidth>=820?1+.3*Math.min(1,(innerWidth-820)/620):1,sf=o=>1+(DS-1)*(o.wd||0),
 // 細線框在 125%／150% 縮放下對齊整數裝置像素（不再糊成兩格半透明）；手機寬度不變
 snap=t=>innerWidth>=820?Math.max(1,Math.round(t*devicePixelRatio-.01))/devicePixelRatio:t,
-draw=(el,w,h)=>{const o=el._sq,f=sf(o),k=f+'|'+(o.rg?snap(o.t):0);if(!w||!h||(o.w==w&&o.h==h&&o.k==k))return;o.w=w;o.h=h;o.k=k;const e=o.r.map(v=>v*K*f),d=P(w,h,e);el.style.clipPath=`path("${d}")`;if(o.rg)o.rg.style.clipPath=`path(evenodd,"${d}${P(w,h,e,snap(o.t))}")`},
+draw=(el,w,h)=>{const o=el._sq,f=sf(o),k=f+'|'+(o.rg?snap(o.t):0);if(!w||!h||(o.w==w&&o.h==h&&o.k==k))return;o.w=w;o.h=h;o.k=k;const e=o.r.map(v=>v*K*f),d=P(w,h+o.xb,e);(o.bg||el).style.clipPath=`path("${d}")`;if(o.rg)o.rg.style.clipPath=`path(evenodd,"${d}${P(w,h,e,snap(o.t))}")`},
 ro=on&&new ResizeObserver(es=>{for(const x of es){const t=x.target,b=x.borderBoxSize&&x.borderBoxSize[0],w=b?b.inlineSize:t.offsetWidth,h=b?b.blockSize:t.offsetHeight;t._sq.fw=w;t._sq.fh=h;draw(t,w,h)}}),els=[],
-scan=(root=document)=>{if(!on)return;L.forEach(([s,r,t,wd])=>root.querySelectorAll(s).forEach(el=>{if(el._sq)return;el._sq={r:Array.isArray(r)?r:[r,r,r,r],t,wd:wd||0};if(t){const i=document.createElement('i');i.className='rg';i.setAttribute('aria-hidden','true');el.append(i);el._sq.rg=i}el.dataset.sq='';els.push(el);ro.observe(el,{box:'border-box'})}))};
+scan=(root=document)=>{if(!on)return;L.forEach(([s,r,t,wd,md,xb])=>root.querySelectorAll(s).forEach(el=>{if(el._sq)return;el._sq={r:Array.isArray(r)?r:[r,r,r,r],t,wd:wd||0,xb:xb||0};if(t){const i=document.createElement('i');i.className='rg';i.setAttribute('aria-hidden','true');el.append(i);el._sq.rg=i}if(md=='b'){const g=document.createElement('i');g.className='sqb';g.setAttribute('aria-hidden','true');el.append(g);el._sq.bg=g;el.dataset.sqb='';if(el._sq.rg)g.append(el._sq.rg)}el.dataset.sq='';els.push(el);ro.observe(el,{box:'border-box'})}))};
 let DS=dsf();addEventListener('resize',()=>{DS=dsf()});
 if(on){R.classList.add('sq');scan()}
 return{on,P,K,snap,ext:el=>el&&el._sq?el._sq.r.map(v=>v*K*sf(el._sq)):null,scan,draw:(el,w,h)=>{if(on&&el._sq)draw(el,w,h)},all:()=>{if(!on)return;DS=dsf();const z=els.map(el=>{if(!el.isConnected)return null;const o=el._sq,W=el.offsetWidth,H=el.offsetHeight;return[o.fw&&Math.round(o.fw)==W?o.fw:W,o.fh&&Math.round(o.fh)==H?o.fh:H]});els.forEach((el,i)=>z[i]&&draw(el,z[i][0],z[i][1]))},path:(w,h,r)=>`path("${P(w,h,[r,r,r,r].map(v=>v*K))}")`}})();
@@ -637,7 +674,7 @@ addEventListener('touchstart',()=>{},{passive:true});
 addEventListener('resize',()=>kick(500));
 addEventListener('pointerdown',e=>{const t=e.target.closest('.press,.kc,.bx,.rh,.tc,#av');if(!t||t.disabled)return;t.classList.add('dn');const up=()=>{t.classList.remove('dn');removeEventListener('pointerup',up);removeEventListener('pointercancel',up)};addEventListener('pointerup',up);addEventListener('pointercancel',up)},{passive:true});
 // 進場
-const io=new IntersectionObserver(es=>es.forEach(x=>{if(x.isIntersecting){const t=x.target;t.classList.add('in');setTimeout(()=>t.classList.add('done'),1800);io.unobserve(t)}}),{threshold:.12});$$('.rv').forEach(e=>io.observe(e));setTimeout(()=>$('.hero').classList.add('in'),80);
+const io=new IntersectionObserver(es=>es.forEach(x=>{if(x.isIntersecting){const t=x.target.closest('.rv');t.classList.add('in');setTimeout(()=>t.classList.add('done'),1800);io.unobserve(x.target)}}),{threshold:.12});$$('.rv').forEach(e=>io.observe(e.querySelector(':scope>.rvt')||e));setTimeout(()=>$('.hero').classList.add('in'),80);
 
 // 案例頁導覽：目前頁面的位置以既有的滑塊標示
 const LK=$('#lk'),la=$('#lk a.on'),pl=()=>{if(la&&LK.offsetParent){PL(LK).s.style.opacity=1;mv(LK,la,1)}};document.readyState=='complete'?pl():addEventListener('load',pl);addEventListener('resize',pl);document.fonts&&document.fonts.ready.then(pl);
