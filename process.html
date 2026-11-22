@@ -1,0 +1,585 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="color-scheme" content="light dark"><title>實作紀錄｜Lucius Rhinesonus</title><meta name="description" content="Lucius Rhinesonus 個人網站的版本時間軸、除錯紀錄、測試紀錄與 AI 協作分工。"><meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff"><meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000000"><link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHBhdGggZmlsbD0iIzFkMWQxZiIgZD0iTTQ3LjIgMEM1MC4zOSAwIDU0IDAgNTcuMDkgMS40N0ExMS40MiAxMS40MiAwIDAgMSA2Mi41MyA2LjkxQzY0IDEwIDY0IDEzLjYxIDY0IDE2LjhMNjQgNDcuMkM2NCA1MC4zOSA2NCA1NCA2Mi41MyA1Ny4wOUExMS40MiAxMS40MiAwIDAgMSA1Ny4wOSA2Mi41M0M1NCA2NCA1MC4zOSA2NCA0Ny4yIDY0TDE2LjggNjRDMTMuNjEgNjQgMTAgNjQgNi45MSA2Mi41M0ExMS40MiAxMS40MiAwIDAgMSAxLjQ3IDU3LjA5QzAgNTQgMCA1MC4zOSAwIDQ3LjJMMCAxNi44QzAgMTMuNjEgMCAxMCAxLjQ3IDYuOTFBMTEuNDIgMTEuNDIgMCAwIDEgNi45MSAxLjQ3QzEwIDAgMTMuNjEgMCAxNi44IDBaIi8+PHRleHQgeD0iMzEiIHk9IjQ1IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iLWFwcGxlLXN5c3RlbSxIZWx2ZXRpY2EsQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIzOCIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iI2ZmZiI+TDwvdGV4dD48Y2lyY2xlIGN4PSI0NiIgY3k9IjQyLjUiIHI9IjMuNiIgZmlsbD0iIzI5OTdmZiIvPjwvc3ZnPg=="><link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAC0CAIAAACyr5FlAAAF+0lEQVR42u3d34tcZx3H8c/3ec6ZM7P5RdysYOs2N2lgQWQhAbFiwS2NaQxF9EL8E4QGRSGlN21FrwXvjHd6KYKpihfSgl4U7yS2N23NRaQlxSTqTHdmZ/ec8zxfL2abFpWwu3V3dqbvN+zNMsMOM699znOe8wzHlpdPi+h/FXgLCBwEDgIHgYPAQeAgcBA4CBwEDiJwEDgIHAQOAgeBg8BB4CBwEDiIwEHgIHAQOAgcBA4CB4GDwEHgIAIHgYPAQeAgcBA4CBwEDgIHgYPAQfRfFTP6us3MzPb89Jwzn/184jCzra2ttm339vQYY1VVfPZziCOEsL6+fuXKMxcuXMg5hRB3M2CkEOKNGzdefPH7vV7P3REwVzjMrGmalZWVxx77/J55tW1rZuCYz8PKeDxOKaWUYtzFyDF5/Gg0+ijzFXDMwMFlwmJXOCaPD4FzNE5lCRwEDgIHgYPAQeAgcBA4iMBB4CBwEDgIHAQOAgeBg8BB4CBwEIGDwEHgIHAQOAgcBA4CB4GDwEEEDgIHgYPAQeAgcBA4CBwEDgIHETgIHAQOAgeBg8BB4CBwEDgIHAQOInAQOAgcBA4CB4mbDtOHMk3ui+3bP+A4FHc7jzHGGA/gpuU5Z3f/TxOTW2KnVjlJkgXFUpI8yx0c06xp2n6/n3POOe/336qqbqdTfuAjROXWx+/Jsy2ctOqEXJ5qH96VZ+scUVFtiwHHwY8ZkpaWFi9deqrXW3DfRxzuMtPNmzdv3363LEt3Vyh83LfuieIzT5dnvxyWz9mRT0pSPUrv3kh/faV985Xc/5v1Tm6PIuA40Ol3CJJWV1evX//VwfzFq1efvXbtp59YXExt8tHdYuVydfGF+KmzMnkrTQAsnChPPVR+9lIe3Kv/8OP6T9es6Ch2pu7j43hYcXff/0N7SinG2DTN9swm1dWTL1RPfFeSjydTDZPZZCbqTZZkvVPdr/4gnv7c5m+uauu9qfv4mE5ID2Aq6u4hBDNTKHzjn50nnu9+5Tt50EpBIX54eipJFiUpuQ/b8vxl657c+NnXLJSsc8y3xOjjfrFyuVr7dh40UpSFB7BVLH1QFytfqNae881/KRTgmN9ya9Xx6uIPJZOidjJihdLHufPFZ+LD51UPH4QJHLM9v6mHxaNfig894ltppx+zmXK2XlGufsObMTjmeORI8exFyXe3BmrBG8Uza9Y7qdzIwDF3815JtrAYl897a7scAIJaD4uPhFNn1WxN62Pi2so+C+kes+4p5funJTu96iJ365R2dMlza1MaOhg59nvSIX2ki2rO2cr82khbXm/s5T/fTCmpHjEhnc+FWEk+vJNvv2alv79UvuPnRsuDe+nOG1Z2d/dccPiMpJzSzZfvL5PvfMCx0tOtV314R7Gc1nX8WZ2QTnZjFMXhff2T1xa6x5o3X8r9oToLSq6dLtubsjWv/1IWpzjrKGb04shotDEYDHLOkwuth3GBI+cQQp1M/bfrP/6ovPy8D5vtTT0PLjV2tGz+/Lv2rd9b97h8ats7bHn59CweUxYWep1O5e4HcAltzy/SzDbG47puVA973/x5ee4pH9SK5YNOa1NjR8p8953RT57U1voUjymzPXKsrw9n4fAXLBQqqs1ff8+qI8XK4z6WcisLMvtAibs8S2ZHy/z3W+NffMtH/7DusenuCpvJkeP+nq6ZGOS2d4mm2lNbrV3tPH7FuqU3Unt/u5epMCulrOYvL23+9jkf3Zu6jBnGMYOcg+S+0Y+fPlesfr04sxYWz1gnSvIk77+Tbr3avH69fetlK6pDspMUHAe8dBBVj7zZtN6JsPSoHV2SS/Uo3XnDh/cUglXHJT8ke9DBMY0hxIJyq2bTczv5jZVdxVKuKZ6bcOHtMExD8vZUo7Ng24tjLvfD840EcBwSJXxXlvgiNYGDwEHg4C0gcBA4CBwEDgIHgYPAQeAgcBA4iMBB4CBwEDgIHAQOAgeBg8BB4CACB4GDwEHgIHAQOAgcBA4CB4GDCBwEDgIHgYPAQeAgcBA4CBwEDgIHETgIHPR/6N9u4J5haSJOGwAAAABJRU5ErkJggg=="><style>
+:root{--bg:#fff;--alt:#f5f5f7;--cd:#fff;--tx:#1d1d1f;--g2:#86868b;--mu:#6e6e73;--ac:#0066cc;--ln:rgba(0,0,0,.1);--gl:rgba(255,255,255,.86);--sp:cubic-bezier(.34,1.56,.64,1);--ea:cubic-bezier(.22,1,.36,1);box-sizing:border-box;padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root{--bg:#000;--alt:#111113;--cd:#1c1c1e;--tx:#f5f5f7;--mu:#a1a1a6;--ac:#2997ff;--ln:rgba(255,255,255,.14);--gl:rgba(0,0,0,.8)}}
+*{box-sizing:border-box}html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 52px);-webkit-text-size-adjust:100%;text-size-adjust:100%;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:var(--bg);color:var(--tx);font:17px/1.65 -apple-system,"SF Pro TC","PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+[hidden]{display:none!important}a{color:var(--ac);text-decoration:none}button{font:inherit;color:inherit;cursor:pointer}p{margin:0 0 12px}hr{border:0;border-top:1px solid var(--ln);margin:18px 0}
+.skip{position:absolute;left:-999px}.skip:focus{left:8px;top:8px;z-index:99;background:var(--bg);padding:8px}:focus-visible{outline:2px solid var(--ac);outline-offset:3px}
+header{position:fixed;top:0;left:0;right:0;z-index:50;padding-top:env(safe-area-inset-top,0px);background:var(--gl);backdrop-filter:saturate(180%) blur(20px)}
+#bar{position:absolute;left:0;right:0;top:0;height:2px;background:var(--ac);transform:scaleX(0);transform-origin:left;z-index:2}
+.hb{height:52px;max-width:1080px;margin:auto;padding:0 20px;display:flex;align-items:center;gap:10px}.hb>b{font-size:21px;letter-spacing:-.03em;margin-right:auto}
+.ab{background:var(--tx);color:var(--bg);font-size:13px;font-weight:600;padding:6px 14px;border-radius:99px;transition:transform .6s var(--sp)}
+#mb{width:36px;height:36px;border:0;background:none;position:relative}#mb i{position:absolute;left:9px;right:9px;height:1.5px;background:var(--mu);transition:transform .6s var(--sp),top .4s}#mb i:first-child{top:14px}#mb i:last-child{top:21px}#mb.open i:first-child{top:17.5px;transform:rotate(45deg)}#mb.open i:last-child{top:17.5px;transform:rotate(-45deg)}
+#lk{display:none;position:relative;gap:2px}#lk a{position:relative;z-index:1;padding:6px 12px;font-size:14px;color:var(--mu);transition:color .3s}#lk a.on{color:var(--tx)}
+.pl{position:absolute;left:0;top:0;border-radius:99px;background:var(--cd);box-shadow:0 2px 10px rgba(0,0,0,.14)}#pill{background:rgba(127,127,127,.2);box-shadow:none;opacity:0;transition:opacity .3s}
+@media(min-width:820px){#lk{display:flex}#mb{display:none}}
+#mm{position:fixed;inset:0;z-index:45;padding:calc(env(safe-area-inset-top,0px) + 80px) 26px 30px;background:var(--bg);visibility:hidden;opacity:0;pointer-events:none;clip-path:circle(0 at calc(100% - 38px) calc(env(safe-area-inset-top,0px) + 34px));transition:clip-path .85s var(--ea),opacity .4s,visibility 0s .85s}#mm.open{visibility:visible;transition:clip-path .85s var(--ea),opacity .4s;opacity:1;pointer-events:auto;clip-path:circle(160% at calc(100% - 38px) calc(env(safe-area-inset-top,0px) + 34px))}
+#mm a{display:block;color:var(--tx);font-size:32px;font-weight:700;letter-spacing:-.02em;padding:9px 0;opacity:0;transform:translateY(34px);transition:opacity .7s var(--ea),transform .7s var(--ea)}#mm.open a{opacity:1;transform:none;transition-delay:calc(var(--i)*60ms + .18s)}
+.s{padding:76px 22px}.w{max-width:1080px;margin:auto}.al{background:var(--alt)}
+.k{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--g2);margin:0 0 14px}
+.h2{font-size:clamp(34px,6.2vw,62px);font-weight:700;line-height:1.12;letter-spacing:-.025em;margin:0 0 20px}.h2 span,h1 .g{display:block;color:var(--g2)}
+h1{font-size:clamp(48px,11vw,104px);line-height:1.05;letter-spacing:-.03em;margin:6px 0 24px}h3{margin:0 0 8px;font-size:21px}.mu{color:var(--mu)}.sm{font-size:14px}
+.rv{opacity:0;transform:translateY(38px);transition:opacity .9s var(--ea),transform .9s var(--ea);transition-delay:calc(var(--i,0)*90ms)}.rv.in{opacity:1;transform:none}.rv.done{transition:transform .6s var(--sp),opacity .3s;transition-delay:0s}
+.ln{display:block;overflow:hidden;padding-bottom:.1em}.ln>span{display:block;transform:translateY(112%);transition:transform 1.2s var(--ea);transition-delay:calc(var(--i)*130ms + .1s)}.hero.in .ln>span{transform:none}
+
+.btn{display:inline-flex;align-items:center;gap:8px;padding:13px 22px;border-radius:99px;background:var(--tx);color:var(--bg);border:0;font-weight:600;font-size:15px;margin:0 8px 10px 0;transition:transform .6s var(--sp)}.btn.g{background:rgba(127,127,127,.16);color:var(--ac)}.lnk{font-size:15px}
+
+.pr{padding-top:calc(env(safe-area-inset-top,0px) + 96px);padding-bottom:30px}
+.id{display:flex;align-items:center;gap:14px;margin:26px 0 22px}#av{width:58px;height:58px;padding:0;border:0;border-radius:16px;overflow:hidden;background:#ddd;transition:transform .6s var(--sp)}#av img{display:block;width:100%;height:100%;object-fit:cover}.id b{display:block;font-size:14px;line-height:1.4}.id small{color:var(--mu);font-size:13px}
+.st3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;border-top:1px solid var(--ln);padding-top:20px}.st3 small{display:block;color:var(--g2);font-size:12px}.st3 b{font-size:15px}
+#zm{position:fixed;inset:0;z-index:70;display:grid;place-items:center;background:rgba(0,0,0,.45);-webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px);visibility:hidden;opacity:0;pointer-events:none;transition:opacity .5s,visibility 0s .5s}#zm.open{visibility:visible;opacity:1;pointer-events:auto;transition:opacity .5s}#zw{position:relative;width:min(78vw,380px);aspect-ratio:1}#zs{position:absolute;inset:8% 6% -2%;filter:blur(34px)}#zs i{position:absolute;inset:0;border-radius:40px;background:rgba(0,0,0,.5)}#zi{position:relative;display:block;width:100%;height:100%;border-radius:32px;object-fit:cover}
+.row{display:grid;grid-template-columns:48px 1fr;padding:28px 0;border-top:1px solid var(--ln)}.row>span{color:var(--g2);font-size:13px;padding-top:6px}.row h3{font-size:26px;letter-spacing:-.01em}.row em{font-style:normal;font-size:14px;display:block;margin-top:12px}
+
+.fh{display:flex;justify-content:space-between;font-size:14px;margin:26px 0 10px}.fh span{color:var(--g2)}.fcs{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.fc{position:relative;background:var(--cd);border-radius:20px;padding:16px 14px;font-size:13px;color:var(--g2);transition:box-shadow .5s,transform .6s var(--sp)}.fc b{display:block;color:var(--tx);font-size:14px;margin:12px 0 2px}.fc::after{content:"✓";position:absolute;right:12px;top:10px;color:#30d158;font-weight:700;transform:scale(0);transition:transform .7s var(--sp)}.fc.on{box-shadow:inset 0 0 0 2px #30d158}.fc.on::after{transform:scale(1)}
+.qz{position:relative;overflow:hidden;background:var(--cd);border-radius:32px;margin-top:22px;box-shadow:0 8px 40px rgba(0,0,0,.06)}.qz canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:5}
+.qh{padding:28px 24px;background:rgba(127,127,127,.07)}.qh .h2{font-size:34px;margin-bottom:10px}.qh .h2 i{color:var(--ac);font-style:normal}.c3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:20px 0}.c3 small{color:var(--g2);font-size:12px}.c3 b{display:block;font-size:16px}.c3 span{font-size:12.5px;color:var(--mu);line-height:1.5;display:block}
+.qq{padding:24px}#qm{display:flex;justify-content:space-between;font-size:12px;color:var(--g2);margin:0}.sgs{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin:10px 0 22px}.sg{height:3px;border-radius:2px;background:var(--ln);position:relative;overflow:hidden}.sg::after{content:"";position:absolute;inset:0;background:var(--ac);transform:scaleX(0);transform-origin:left;transition:transform .8s var(--ea)}.sg.c::after{transform:none;opacity:.4}.sg.d::after{transform:none;opacity:1}
+.qg{font-size:56px;line-height:.8;height:30px;color:var(--g2);opacity:.6}#qt{margin:6px 0 20px;font-size:clamp(23px,4.4vw,32px);line-height:1.35;font-weight:700;letter-spacing:-.01em}
+.ch{position:relative;display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.ch button{position:relative;border:0;background:var(--alt);border-radius:18px;padding:15px 4px;font-size:15px;transition:transform .6s var(--sp)}.ch button span{position:relative;z-index:2;pointer-events:none;transition:color .3s}.ch button small{color:var(--g2);margin-right:4px}.ch button.on span,.ch button.on small{color:#fff}
+.gw{position:absolute;inset:0;z-index:1;pointer-events:none}.bl{position:absolute;left:0;top:0;width:0;height:0;border-radius:18px;background:var(--pc,#0066cc);opacity:0;transition:opacity .3s,background .4s}.bl+.bl{display:none}.ch.on .bl{opacity:1}
+.pn{display:grid;grid-template-rows:0fr;transition:grid-template-rows .7s var(--sp)}.pn>div{min-height:0;overflow:hidden}.pn.show{grid-template-rows:1fr}.pn p{margin:0;padding:10px 4px 2px;color:var(--mu);font-size:16px;opacity:0;transform:translateY(-10px);transition:opacity .6s var(--ea),transform .6s var(--ea)}.pn.show p{opacity:1;transform:none;transition-delay:.12s}
+#ft{margin:16px 0 10px;padding:0;color:var(--tx);opacity:1;transform:none;filter:none}#hq{font-size:13px;color:var(--g2);margin:18px 0 0}
+#sm{padding:24px}#sm li{animation:up .8s var(--ea) both;animation-delay:calc(var(--i)*90ms)}@keyframes up{from{opacity:0;transform:translateY(24px)}}#sm ol{padding-left:20px}#sm li{margin-bottom:8px}#sm small{margin-left:8px;color:var(--mu)}
+.g2c{display:grid;gap:12px;margin-top:14px}.kc{position:relative;display:block;background:var(--cd);border-radius:24px;padding:20px;color:var(--tx)}.kc h3{font-size:19px;margin:8px 0 0}.kc i{position:absolute;right:18px;top:18px;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-style:normal;background:var(--alt);transition:transform .6s var(--sp)}.kc:hover i{transform:translate(3px,-3px) rotate(8deg)}
+@media(min-width:800px){.g2c,.dgrid{grid-template-columns:1fr 1fr}}
+.dc{position:relative;background:var(--cd);border-radius:30px;padding:26px 22px;margin-top:14px}.dc::after{content:"";position:absolute;right:22px;top:24px;width:7px;height:7px;border-radius:50%;background:var(--ac)}.dc.ui::after{display:none}.dc small.k{margin-bottom:22px;display:block}.big{display:inline-block;font-size:76px;line-height:1;font-weight:400;letter-spacing:-.04em}.ui .big{color:var(--g2)}.big+b{font-size:13px;margin-left:8px}.dc h3{font-size:23px;line-height:1.4;margin:16px 0 0}
+.ex{display:flex;flex-wrap:wrap;gap:8px}.chip{display:inline-flex;align-items:center;gap:10px;border:0;background:var(--alt);border-radius:14px;padding:10px 14px;font-size:14px;transition:transform .6s var(--sp),background .3s,color .3s}.chip i{font-style:normal;color:var(--g2);display:inline-block;transition:transform .7s var(--sp)}.chip.open{background:var(--tx);color:var(--bg)}.chip.open i{transform:rotate(135deg);color:inherit}
+.dk{background:#1d1d1f;color:#f5f5f7;--tx:#f5f5f7;--mu:#a1a1a6;--ln:rgba(255,255,255,.14);--ac:#2997ff;--cd:#2c2c2e;--bg:#1d1d1f}.dk .btn{background:#f5f5f7;color:#1d1d1f}.dk .btn.g{background:rgba(255,255,255,.12);color:#2997ff}
+.seg{position:relative;display:flex;background:rgba(127,127,127,.18);border-radius:18px;padding:4px;margin:14px 0}.seg .pl{border-radius:14px;background:var(--cd)}.dk .seg .pl{background:#f5f5f7}.seg button{position:relative;z-index:1;flex:1;border:0;background:none;padding:12px 8px;border-radius:14px;font-size:14px;transition:color .3s}.seg button.on{color:var(--tx)}.dk .seg button.on{color:#1d1d1f}
+.ph{position:relative;overflow:hidden;background:#fff;color:#1d1d1f;--tx:#1d1d1f;--mu:#6e6e73;--ln:rgba(0,0,0,.1);--bg:#fff;--ac:#0066cc;--cd:#fff;border-radius:28px;padding:20px 20px 24px;min-height:410px;max-width:560px}
+.ph .hd{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--mu)}.ph .hd em{font-style:normal;background:#f5f5f7;border-radius:8px;padding:2px 10px;font-size:12px}
+.trk{position:relative;display:flex;justify-content:space-between;font-size:12px;color:var(--g2);margin:6px 0 22px;padding-bottom:12px}.trk span.on{color:var(--ac);font-weight:600}.trk svg{position:absolute;left:0;right:0;bottom:0;width:100%;height:4px}.trk path{fill:none;stroke-width:2.5;stroke-linecap:round;vector-effect:non-scaling-stroke}#pth{stroke:var(--ac);stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset .9s var(--ea)}
+.mn{position:relative;height:50px;display:flex;justify-content:flex-end;transition:height .6s var(--sp),opacity .3s}.s1 .mn,.s2 .mn{height:0;opacity:0;overflow:hidden}.vB .mn{display:block}#dr{display:none}.vB #dr{display:flex;width:100%;justify-content:center}.vB #mg,.vB #menu{display:none}
+#menu{position:absolute;right:0;top:calc(100% + 4px);min-width:190px;z-index:3;transform-origin:top right;transform:scale(.2,.12);opacity:0;filter:drop-shadow(0 14px 22px rgba(0,0,0,.24));pointer-events:none;transition:transform .6s var(--sp),opacity .25s}#menu.open{transform:none;opacity:1;pointer-events:auto}.mi{background:#fff;border-radius:18px;padding:6px}#menu button{display:block;width:100%;text-align:left;border:0;background:none;padding:11px 12px;border-radius:12px;opacity:0;transform:translateY(-8px);transition:opacity .4s var(--ea) calc(var(--i)*50ms + .05s),transform .4s var(--ea) calc(var(--i)*50ms + .05s)}#menu.open button{opacity:1;transform:none}#menu button:hover{background:#f5f5f7}
+.s1 #edp,.s2 #dnp{grid-template-rows:1fr}.tcs{display:flex;gap:8px;margin:10px 0 14px}.tc{border:1px solid var(--ln);background:none;border-radius:14px;padding:9px 14px;transition:transform .5s var(--sp),background .3s}.tc.on{background:var(--ac);color:#fff;border-color:transparent;transform:scale(1.06)}
+#ck{width:56px;height:56px;margin:10px 0}#ck *{fill:none;stroke:#30d158;stroke-width:3;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset .8s ease}.s2 #ck *{stroke-dashoffset:0}.s2 #ck path{transition-delay:.35s}
+.up{padding-top:6px}.up ul{list-style:none;padding:14px 0 0;margin:0;border-top:1px solid var(--ln)}.up li{padding:5px 0;font-size:15px}.up li::before{content:"·";margin-right:8px;color:var(--mu)}.up p.lb{font-size:13px;color:var(--mu);margin:20px 0 0}
+.tabs{position:relative;display:flex;background:rgba(127,127,127,.16);border-radius:99px;padding:4px;width:max-content;max-width:100%;overflow-x:auto;margin:16px 0}.tabs .pl{background:var(--tx);box-shadow:none}.tabs button{position:relative;z-index:1;border:0;background:none;padding:9px 16px;border-radius:99px;white-space:nowrap;font-size:14px;transition:color .3s}.tabs button.on{color:var(--bg)}
+.huge{font-size:clamp(50px,13vw,120px);line-height:1;letter-spacing:-.04em;margin:0 0 26px}.huge span{display:inline-block;color:var(--g2)}
+.rp{background:var(--cd);border-radius:26px;margin-top:12px;overflow:hidden}.rh{position:relative;width:100%;display:block;text-align:left;padding:20px 66px 20px 22px;background:none;border:0}.rh small{display:block;color:var(--g2);font-size:12px}.rh b{font-size:19px;line-height:1.4}
+.rh i{position:absolute;right:18px;top:50%;margin-top:-17px;width:34px;height:34px;border-radius:50%;background:var(--alt)}.rh i::before,.rh i::after{content:"";position:absolute;left:11px;right:11px;top:16px;height:1.5px;background:var(--mu);transition:transform .7s var(--sp)}.rh i::after{transform:rotate(90deg)}.rp.open .rh i::after{transform:rotate(0)}.rp.open .rh i::before{transform:rotate(180deg)}
+.rp .pn>div{clip-path:inset(0 0 100% 0);transition:clip-path .9s var(--ea)}.rp.open .pn{grid-template-rows:1fr}.rp.open .pn>div{clip-path:inset(0)}
+.bd{padding:0 22px 22px}.bd>*{opacity:0;transform:translateY(20px);transition:opacity .7s var(--ea),transform .7s var(--ea);transition-delay:calc(var(--i,0)*70ms)}.rp.open .bd>*{opacity:1;transform:none;transition-delay:calc(var(--i,0)*70ms + .2s)}
+.bd p{color:var(--mu);font-size:16px}.bd h3{font-size:18px;margin-top:20px}.ft{display:flex;gap:18px;font-size:13px;padding-bottom:16px;border-bottom:1px solid var(--ln);margin-bottom:6px}.ft button,.nv a{border:0;background:none;color:var(--ac);padding:0;font-size:13px}.nv{display:flex;justify-content:space-between;gap:10px;border-top:1px solid var(--ln);margin-top:22px;padding-top:16px;font-size:13px}
+.fd{background:var(--alt);border-radius:28px;padding:22px 16px;margin:22px 0;text-align:center}.fd .k{margin:0 0 6px}.fd h3{font-size:25px;line-height:1.3}.fd .seg{max-width:260px;margin:14px auto}.bxs{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:20px 0 10px}
+.bx{border:0;background:none;padding:0;text-align:center;font-size:12px;color:var(--mu)}
+.lb .lid em{display:block}
+
+.fm{display:flex;justify-content:space-between;align-items:baseline;text-align:left;font-size:14px;color:var(--mu);border-top:1px solid var(--ln);padding-top:14px;gap:14px}.fm b{font-size:26px;color:var(--tx)}
+.cp{background:var(--cd);border-radius:24px;padding:22px 18px;text-align:left;margin-top:16px}.cp h3{font-size:25px;line-height:1.3;margin:6px 0 16px}.cps{display:grid;grid-template-columns:1fr 1fr;gap:14px}.cps small{color:var(--g2);font-size:12px}.cps b{display:block;font-size:44px;line-height:1.1;font-weight:500}.cps .tkb{height:3px;border-radius:2px;background:var(--ln);margin-top:6px;overflow:hidden}.cps .tkb i{display:block;height:100%;background:var(--ac);transform:scaleX(0);transform-origin:left;transition:transform 1s var(--ea)}.cp p{font-size:14px;margin-top:14px}
+footer{padding:34px 22px calc(34px + env(safe-area-inset-bottom,0px));background:var(--alt)}footer .w{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;font-size:13px;color:var(--mu)}footer b{font-size:20px;color:var(--tx)}
+
+/* ===== C 型圓角（參考圖 c：直線→曲率線性漸增→等曲率圓弧→漸減→直線）=====
+   路徑由下方腳本依每個元素實際尺寸產生；角的延伸長度 = 1.2 × 原圓角，短邊不足時等比縮小 */
+
+.sq [data-sq]{border-radius:0!important}
+
+
+.sq :is(.btn,.ab,.chip,.tc,#av,#menu button,.rp){position:relative}
+
+
+
+
+
+
+
+
+
+
+
+.sq .fc,.sq .fc.on,.sq .qz{box-shadow:none}
+
+
+.sq .tc{border:0;padding:10px 15px}
+
+
+.sq .dc::after{border-radius:0;clip-path:path("M3.5 0C4.16 0 4.92 0 5.56 0.31A2.38 2.38 0 0 1 6.69 1.44C7 2.08 7 2.84 7 3.5L7 3.5C7 4.16 7 4.92 6.69 5.56A2.38 2.38 0 0 1 5.56 6.69C4.92 7 4.16 7 3.5 7L3.5 7C2.84 7 2.08 7 1.44 6.69A2.38 2.38 0 0 1 0.31 5.56C0 4.92 0 4.16 0 3.5L0 3.5C0 2.84 0 2.08 0.31 1.44A2.38 2.38 0 0 1 1.44 0.31C2.08 0 2.84 0 3.5 0Z")}
+#pth{vector-effect:none;stroke-linecap:butt}
+
+
+/* ===== v2：依手機實測錄影修正 ===== */
+button,a,.bx,.kc,.rh{touch-action:manipulation}
+/* 按壓回饋（取代灰色矩形點擊高亮）：等比縮放，c 型輪廓不變形 */
+.bx{transition:transform .5s var(--sp)}.seg>button,.tabs>button{transition:color .3s,transform .5s var(--sp)}.rp{transition:transform .5s var(--sp)}
+.press.dn,.tc.dn,#av.dn{transform:scale(.95);transition:transform .12s ease-out}
+.kc.dn{transform:scale(.98);transition:transform .12s ease-out}
+.bx.dn{transform:scale(.94);transition:transform .12s ease-out}
+.seg>button.dn,.tabs>button.dn{transform:scale(.94);transition:transform .12s ease-out}
+.rp:has(>.rh.dn){transform:scale(.985);transition:transform .12s ease-out}
+/* 頁首：經過深色區塊時切換為深色玻璃 */
+header{transition:background-color .18s linear,color .18s linear}
+header.dkh{background:rgba(29,29,31,.84);color:#f5f5f7}
+header.dkh #mb i{background:#a1a1a6}
+header.dkh .ab{background:#f5f5f7;color:#1d1d1f}
+header.dkh #lk a{color:#a1a1a6}header.dkh #lk a.on{color:#f5f5f7}
+
+/* 漢堡鈕：先合攏再旋轉，不再出現「>」形 */
+#mb i{transition:transform .22s var(--ea),top .2s var(--ea) .2s}
+#mb.open i{transition:top .2s var(--ea),transform .36s var(--sp) .18s}
+/* 行動選單：不透明、可在矮螢幕內捲動、背景頁鎖定 */
+
+#mm{opacity:1!important;overflow-y:auto;overscroll-behavior:contain;padding-left:max(26px,env(safe-area-inset-left));transition:clip-path .55s var(--ea),visibility 0s .55s}
+#mm.open{transition:clip-path .75s var(--ea),visibility 0s}
+@media (max-height:540px){#mm{padding-top:calc(env(safe-area-inset-top,0px) + 66px)}#mm a{font-size:24px;padding:5px 0}}
+/* 分段控制：滑塊移動時文字不再消失（反色文字層跟著滑塊裁切） */
+
+
+.tabs{--ovc:var(--bg);scrollbar-width:none}.tabs::-webkit-scrollbar{display:none}.dk .seg{--ovc:#1d1d1f}
+
+/* 報告：高度由腳本逐格驅動，內容即時淡入，不再先出現空白卡片 */
+.rp .pn{display:block;height:0;overflow:hidden;transition:none}.rp.open .pn{height:auto}
+.rp .pn>div,.rp.open .pn>div{clip-path:none;transition:none}
+.bd>*{transform:translateY(10px);transition:opacity .3s var(--ea),transform .45s var(--ea);transition-delay:0s}
+.rp.open .bd>*{transition-delay:calc(min(var(--i,0),5)*45ms + 60ms)}
+/* ＋／－：直線收合，不再旋轉成 × 或 \ */
+.rh i::before,.rh i::after{transition:transform .38s var(--ea)}
+.rh i::after{transform:rotate(90deg)}.rp.open .rh i::before{transform:none}.rp.open .rh i::after{transform:rotate(90deg) scaleX(0)}
+/* 其他展開面板：去掉回彈，縮短 */
+.pn{transition:grid-template-rows .45s var(--ea)}
+/* 線索工作台：選取色塊即時定位、不閃前一題的顏色 */
+.bl{transition:opacity .25s ease}
+.ch:not(.on) .bl,.ch:not(.on) button span,.ch:not(.on) button small{transition:none}
+#sm li{animation-duration:.5s;animation-delay:calc(var(--i)*50ms)}
+/* 預約示範：選單往上開，不被卡片裁切；白色卡片內的按鈕用淺色主題 */
+#menu{top:auto;bottom:calc(100% + 6px);transform-origin:bottom right}
+#menu button:disabled{color:#86868b}
+.dk .ph .btn{background:#1d1d1f;color:#fff}.dk .ph .btn.g{background:rgba(0,0,0,.06);color:#0066cc}
+.ph .tc:not(.on){background:#f2f2f5}
+/* 只在有游標的裝置顯示 hover，避免觸控「卡住」 */
+@media (hover:none){.kc:hover i{transform:none}#menu button:hover{background:none}}
+/* 瀏海／橫向安全區 */
+.s,footer{padding-left:max(22px,env(safe-area-inset-left));padding-right:max(22px,env(safe-area-inset-right))}
+.hb{padding-left:max(20px,env(safe-area-inset-left));padding-right:max(20px,env(safe-area-inset-right))}
+/* 報告分頁：手機上等寬填滿，不再被裁切 */
+@media (max-width:600px){.tabs{width:100%}.tabs button{flex:1 1 auto;padding:9px 6px}}
+@media (max-width:360px){.tabs button{font-size:13px;padding:9px 3px}}
+/* 窄螢幕（≤360px） */
+@media (max-width:360px){.s{padding-left:16px;padding-right:16px}.fcs{gap:6px}.fc{padding:13px 10px}.c3{gap:10px}.huge{font-size:44px}.st3 b{font-size:14px}}
+
+/* ===== v3 ===== */
+/* 保鮮盒（¾ 俯視）：上方是盒蓋，下方露出盒身前壁；開蓋時盒蓋抬起、退到盒子後方，露出盒緣與菜色。每個部件都是 c 型 */
+.vis{position:relative;display:block;height:100px;margin-bottom:10px;isolation:isolate}
+.vis::before{content:"";position:absolute;left:6%;right:6%;bottom:-8px;height:18px;z-index:-1;background:radial-gradient(closest-side,rgba(0,0,0,.18),transparent);transition:background .4s}
+.bs{position:absolute;inset:18px 4px 0;z-index:1;background:linear-gradient(#fff 0 64%,#e9ecf1 64%,#dde1e8)}
+
+.tr{position:absolute;left:7px;right:7px;top:7px;height:calc(64% - 13px)}
+.t1{background:radial-gradient(5px 4px at 22% 30%,#d9452a 95%,#0000),radial-gradient(4px 4px at 63% 22%,#e2552f 95%,#0000),radial-gradient(5px 4px at 47% 62%,#d9452a 95%,#0000),radial-gradient(4px 3px at 82% 66%,#e2552f 95%,#0000),radial-gradient(3px 3px at 33% 78%,#e86a3a 95%,#0000),radial-gradient(9px 5px at 38% 34%,#fde9a6 95%,#0000),radial-gradient(8px 5px at 74% 44%,#fde9a6 95%,#0000),radial-gradient(7px 4px at 20% 62%,#fde9a6 95%,#0000),radial-gradient(7px 4px at 62% 84%,#fde9a6 95%,#0000),radial-gradient(1.6px 1.6px at 54% 40%,#5e9e45 95%,#0000),radial-gradient(1.6px 1.6px at 30% 52%,#5e9e45 95%,#0000),radial-gradient(1.6px 1.6px at 86% 30%,#5e9e45 95%,#0000),#f4cc52}
+.t2{background:radial-gradient(9px 3px at 30% 34%,#d6eab2 95%,#0000),radial-gradient(8px 2.5px at 70% 70%,#d6eab2 95%,#0000),radial-gradient(11px 6px at 22% 30%,#7fba5f 95%,#0000),radial-gradient(12px 6px at 66% 26%,#356e27 95%,#0000),radial-gradient(11px 6px at 44% 62%,#7fba5f 95%,#0000),radial-gradient(12px 6px at 82% 64%,#356e27 95%,#0000),radial-gradient(10px 5px at 18% 80%,#356e27 95%,#0000),radial-gradient(1.8px 1.8px at 52% 44%,#f4efe0 95%,#0000),radial-gradient(1.8px 1.8px at 34% 72%,#f4efe0 95%,#0000),#558f3d}
+.lid{position:absolute;top:14px;left:1px;right:1px;height:calc(64% + 0px);z-index:3;display:grid;place-items:center;background:linear-gradient(#a9bdcc calc(100% - 6px),#8ea4b4 0);transform-origin:50% 100%;transition:transform .45s var(--sp)}
+.lp{position:absolute;inset:7px 8px 13px;background:linear-gradient(#c9d8e3,#b6c8d5)}
+.lid em{position:relative;display:none;margin-bottom:5px;font-style:normal;font-size:11px;font-weight:600;line-height:1.25;color:#5a4610;padding:4px 9px 3px;transform:rotate(-4deg);background:repeating-linear-gradient(90deg,rgba(255,255,255,.22) 0 2px,transparent 2px 7px),#f3d778;text-align:center;white-space:nowrap}
+.lid em small{display:block;font-size:10px;font-weight:500;opacity:.8}
+.lb .lid em{display:block}
+
+
+.hit .vis::before{background:radial-gradient(closest-side,rgba(0,102,204,.32),transparent)}
+@media (hover:hover){.fd:not(.fin) .bx:not(.op):not(.ing):hover .lid{transform:translateY(-3px)}}
+@media (prefers-color-scheme:dark){.bs{background:linear-gradient(#3a3a3e 0 64%,#2b2b2f 64%,#232326)}.lid{background:linear-gradient(#55697a calc(100% - 6px),#435565 0)}.lp{background:linear-gradient(#6a8091,#5b7182)}.vis::before{background:radial-gradient(closest-side,rgba(0,0,0,.55),transparent)}}
+/* 手風琴：高度由腳本緩慢展開，內容稍後淡入 */
+.ex+.pn{display:block;height:0;overflow:hidden;transition:none}.ex+.pn.show{height:auto}
+.ex+.pn p{opacity:1;transform:none;transition:none}
+.chip{transition:transform .6s var(--sp),background .22s,color .22s}.chip.open{transition:transform .6s var(--sp),background 0s,color 0s}
+.bd>*{transform:translateY(12px);transition:opacity .45s var(--ea),transform .6s var(--ea)}
+.rp.open .bd>*{transition-delay:calc(min(var(--i,0),5)*45ms + 80ms)}
+.pn{transition:grid-template-rows .62s cubic-bezier(.4,0,.2,1)}
+
+/* ===== v4：Safari／各裝置穩定版 ===== */
+:root{--trk:#e2e2e4}
+@media (prefers-color-scheme:dark){:root{--trk:#232325}}
+/* 分段控制：滑塊以 SVG 繪製（逐格更新路徑），文字以差值混合自動反色 —— 不再有重影、殘影、被切平的邊 */
+.pl{display:none!important}
+.pls{position:absolute;left:0;top:0;width:100%;height:100%;overflow:visible;pointer-events:none;z-index:0;transition:opacity .25s}
+.psh{fill:none}
+#lk .pfg{fill:rgba(127,127,127,.2);transition:fill .18s linear}header.dkh #lk .pfg{fill:rgba(255,255,255,.16)}
+.tabs .pfg{fill:var(--tx)}
+.seg .pfg{fill:var(--cd)}.seg .psh{fill:rgba(0,0,0,.1)}
+.dk .seg .pfg{fill:#f5f5f7}.dk .seg .psh{fill:none}
+@media (prefers-color-scheme:dark){#fseg .pfg{fill:#48484a}#fseg .psh{fill:none}}
+.tabs{background:var(--trk)!important;isolation:isolate}
+.tabs>button,.tabs>button.on{color:#fff!important;mix-blend-mode:difference;transition:none}
+.dk .seg{background:#2f2f30!important;isolation:isolate}
+.dk .seg>button,.dk .seg>button.on{color:#ededed!important;mix-blend-mode:difference;transition:none}
+.seg>button{white-space:normal;line-height:1.35}
+.seg>button,.tabs>button{border-radius:0}
+/* 線索工作台：選項本身變色（不再有移動的色塊） */
+.gw{display:none}
+.ch button{background:var(--alt);transition:transform .6s var(--sp),background-color .22s ease}
+.ch button.on{background:var(--pc)}
+.ch:not(.on) button{transition:transform .6s var(--sp)}
+/* 選取框／外框：真實元素 + 直接設定的 c 型環狀路徑 */
+.rg{position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .35s,background-color .35s}
+.fc .rg{background:#30d158}.fc.on .rg{opacity:1}
+.tc .rg{background:var(--ln);opacity:1}.tc.on .rg{opacity:0}
+.bs .rg{background:rgba(0,0,0,.08);opacity:1;z-index:2}.bx.hit .bs .rg{background:var(--ac)}
+@media (prefers-color-scheme:dark){.bs .rg{background:rgba(255,255,255,.1)}}
+/* 鍵盤聚焦框：單一浮動 SVG，沿元素的 c 型輪廓 */
+#fr{position:absolute;left:0;top:0;display:none;pointer-events:none;z-index:80;overflow:visible}
+#fr path{fill:var(--ac);fill-rule:evenodd}
+.fr :focus-visible{outline:none}
+/* 預約示範：先淡出再收合、展開後才淡入；切換版本時瞬間重設 */
+.mn{transition:height .42s cubic-bezier(.4,0,.2,1),opacity .24s ease .22s}
+.s1 .mn,.s2 .mn{transition:opacity .12s ease,height .42s cubic-bezier(.4,0,.2,1) .06s}
+#edp,#dnp{transition:grid-template-rows .42s cubic-bezier(.4,0,.2,1) .1s}
+.s1 #edp,.s2 #dnp{transition-delay:.04s}
+#edp>div,#dnp>div{opacity:0;transition:opacity .12s ease}
+.s1 #edp>div,.s2 #dnp>div{opacity:1;transition:opacity .3s ease .26s}
+#edp p{opacity:1;transform:none;filter:none}
+.nt,.nt *{transition:none!important;animation:none!important}
+/* 行動選單：打開用圓形展開，關閉改為快速淡出（不再在頁面上留下縮小中的文字） */
+#mm{opacity:0!important;transition:opacity .24s ease,clip-path 0s .24s,visibility 0s .24s}
+#mm.open{opacity:1!important;transition:clip-path .7s var(--ea),opacity 0s,visibility 0s}
+/* 極窄螢幕（≤300px，摺疊機外螢幕等） */
+@media (max-width:300px){.s{padding-left:12px;padding-right:12px}.hb{gap:6px}.ab{padding:6px 10px}.tabs button{font-size:12px;padding:9px 2px}.seg button{font-size:13px;padding:10px 4px}.fcs{grid-template-columns:1fr}.c3{grid-template-columns:1fr}.ch{grid-template-columns:1fr}}
+
+/* ===== v5 ===== */
+/* 肖像：完整原圖，不裁切（依原圖比例 1320:1686），僅四角為 c 型 */
+#av{width:60px;height:76.64px;flex:none;background:#f7f7f7}
+#av img{object-fit:contain}
+#zw{width:min(78vw,400px,calc((100vh - 128px) * 0.7829));aspect-ratio:1320/1686}
+@supports (height:100svh){#zw{width:min(78vw,400px,calc((100svh - 128px) * 0.7829))}}
+#zi{object-fit:contain;background:#f7f7f7}
+@media (max-width:300px){#av{width:52px;height:66.42px}}
+/* 行動選單：霧面玻璃淡入（背後頁面逐漸模糊），項目帶模糊滑入、模糊淡出 */
+:root{--glm:rgba(255,255,255,.7)}
+@media (prefers-color-scheme:dark){:root{--glm:rgba(0,0,0,.6)}}
+#mm{background:var(--glm)!important;-webkit-backdrop-filter:blur(26px) saturate(170%);backdrop-filter:blur(26px) saturate(170%);clip-path:none!important;transition:opacity .34s ease,visibility 0s .34s}
+#mm.open{transition:opacity .34s ease,visibility 0s}
+#mm a{opacity:0;transform:translateY(22px);filter:blur(10px);transition:opacity .2s ease,transform .24s ease,filter .2s ease}
+#mm.open a{opacity:1;transform:none;filter:none;transition:opacity .55s var(--ea),transform .62s var(--ea),filter .5s var(--ea);transition-delay:calc(var(--i)*45ms + .08s)}
+/* 首屏標題：由模糊中滑入 */
+.ln>span{filter:blur(8px);transition-property:transform,filter}
+.hero.in .ln>span{filter:none}
+
+/* 預約示範：內容由模糊中淡入 */
+#edp>div,#dnp>div{filter:blur(6px);transition:opacity .12s ease,filter .12s ease}
+.s1 #edp>div,.s2 #dnp>div{filter:none;transition:opacity .3s ease .26s,filter .36s ease .26s}
+
+/* ===== v6：依 21:33 錄影逐幀修正 ===== */
+/* 行動選單：玻璃更不透明；開啟時玻璃先到、文字後到，關閉時文字先走、玻璃後走——兩層文字不再疊在一起 */
+:root{--glm:rgba(255,255,255,.9)}
+@media (prefers-color-scheme:dark){:root{--glm:rgba(12,12,14,.86)}}
+#mm{-webkit-backdrop-filter:blur(34px) saturate(160%);backdrop-filter:blur(34px) saturate(160%);transition:opacity .26s ease .1s,visibility 0s .36s}
+#mm.open{transition:opacity .28s ease,visibility 0s}
+#mm a{transition:opacity .13s ease,transform .16s ease,filter .13s ease}
+#mm.open a{transition:opacity .5s var(--ea),transform .58s var(--ea),filter .46s var(--ea);transition-delay:calc(var(--i)*40ms + .14s)}
+/* 預約示範：按鈕淡出與新內容淡入重疊，不再有空白的一瞬；選單收起時先淡出，不被容器切掉 */
+#menu:not(.open){transition:transform .3s ease,opacity .14s ease}
+.s1 .mn,.s2 .mn{transition:opacity .16s cubic-bezier(.4,0,1,1),height .4s cubic-bezier(.4,0,.2,1) .02s}
+#edp,#dnp{transition:grid-template-rows .42s cubic-bezier(.4,0,.2,1) .02s}
+.s1 #edp,.s2 #dnp{transition-delay:0s}
+.s1 #edp>div,.s2 #dnp>div{transition:opacity .34s cubic-bezier(.2,.7,.3,1) .03s,filter .4s cubic-bezier(.2,.7,.3,1) .03s}
+/* 保鮮盒：盒蓋以後緣為軸向後掀開（不再中途換圖層），菜色隨盒蓋升起逐步露出 */
+.bxs{transition:opacity .17s ease}.bxs.rs{opacity:0;pointer-events:none}
+.lid{transform-origin:50% 0;transition:transform .64s cubic-bezier(.3,.75,.25,1)}
+.lp{transition:opacity .4s ease}.lid em{transition:opacity .2s ease}
+.bx.ing .lid,.bx.op .lid{transform:translateY(-9px) scaleY(.2)}
+.bx.ing .lp,.bx.op .lp{opacity:.35}
+.bx.ing .lid em,.bx.op .lid em{opacity:0;transition-duration:.1s}
+.tr{transition:filter .45s ease,opacity .45s ease}
+.bx.miss .tr{filter:saturate(.5);opacity:.7}
+.st{display:block;min-height:2.9em;line-height:1.45;color:var(--mu);transition:color .3s}
+.st i{display:block;font-style:normal}.st b{display:block;font-weight:inherit;white-space:nowrap}.st small{display:block;font-size:.92em;opacity:.8}
+#fm{min-height:3.3em}
+@media (max-width:360px){.fd .fm{flex-direction:column;align-items:flex-start;gap:2px}}
+.bx.ing .st i,.bx.miss .st i,.bx.hit .st i{animation:stIn .42s var(--ea) both}
+.bx.hit .st{color:var(--ac);font-weight:600}
+@keyframes stIn{from{opacity:0;transform:translateY(5px)}}
+.bx.hit .vis{animation:hitUp .75s var(--sp) both}
+@keyframes hitUp{0%{transform:none}40%{transform:translateY(-5px) scale(1.035)}100%{transform:translateY(-2px)}}
+.fd.fin .bx:not(.op){opacity:.42;transition:opacity .4s ease,transform .5s var(--sp)}
+.bx[aria-disabled=true]{cursor:default}
+
+/* ===== v7：捲動順暢度與選單開啟閃動 ===== */
+/* 視差與進度條改由瀏覽器的捲動時間軸驅動（與捲動同一條執行緒，不靠 JavaScript 逐格追趕）；不支援的瀏覽器維持靜止，不會抖動 */
+@supports (animation-timeline: view()){
+[data-p]{animation:plx linear both;animation-timeline:view()}
+[data-p="-.04"]{--pk:-.04}[data-p=".03"]{--pk:.03}
+@keyframes plx{from{transform:translateY(calc(var(--pk) * 50vh))}to{transform:translateY(calc(var(--pk) * -50vh))}}
+}
+@supports (animation-timeline: scroll()){
+#bar{animation:barp linear both;animation-timeline:scroll(root)}
+@keyframes barp{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+}
+/* 行動選單：真正的交叉淡化——連結的透明度與玻璃完全同一條曲線：頁面淡出多少、選單就淡入多少，畫面不會出現空白的一瞬；
+   逐一浮現的層次只保留在位移與模糊上 */
+#mm{transition:opacity .24s cubic-bezier(.4,0,.6,1),visibility 0s .24s}
+#mm.open{transition:opacity .28s cubic-bezier(.33,0,.2,1),visibility 0s}
+#mm a{transition:opacity .24s cubic-bezier(.4,0,.6,1),transform .24s ease,filter .2s ease}
+#mm.open a{transition:opacity .28s cubic-bezier(.33,0,.2,1),transform .52s var(--ea) calc(var(--i)*30ms),filter .34s var(--ea) calc(var(--i)*30ms)}
+
+/* ===== v8：c 型圓角完整呈現——不被裁切、不被遮擋 ===== */
+/* 題卡：原本的投影被 clip-path 一起裁掉，上緣又和底色同色，看起來像被切平。
+   改為：卡片外一層獨立的 c 型陰影（只在尺寸改變時重畫，不參與內容動畫）＋ 沿 c 型邊緣的細線 */
+.qzw{position:relative;margin-top:22px}
+.qzw>.qz{margin-top:0}
+.sqsh{position:absolute;inset:10px 0 -10px;pointer-events:none;filter:blur(18px)}
+.sqsh b{position:absolute;inset:0 10px;background:rgba(0,0,0,.085)}
+.qz>.rg{opacity:1;z-index:6;background:rgba(0,0,0,.06)}
+@media (prefers-color-scheme:dark){.sqsh{display:none}.qz>.rg{background:rgba(255,255,255,.07)}}
+.qh{background:none;box-shadow:inset 0 -1px 0 var(--ln)}
+@media (prefers-color-scheme:dark){.qh{background:rgba(127,127,127,.07);box-shadow:none}}
+/* 比較卡：白底放在白色報告卡裡，邊緣完全消失 → 改用與冰箱示範相同的淺底 */
+.cp{background:var(--alt)}
+/* 肖像：白色背景貼在白頁面（淺色）、黑色西裝貼在黑頁面（深色）時，c 型四角會溶進背景。
+   加一圈 c 型細線（疊在照片上，不裁切任何內容），淺色模式再加 c 型柔和陰影 */
+.avw{display:block;flex:none;filter:drop-shadow(0 3px 9px rgba(0,0,0,.13))}
+#av{display:block}
+#av>.rg{opacity:1;z-index:1;background:rgba(0,0,0,.08)}
+#zr{position:absolute;inset:0;pointer-events:none;z-index:1}
+#zr>.rg{opacity:1;background:rgba(255,255,255,.22)}
+@media (prefers-color-scheme:dark){.avw{filter:none}#av>.rg{background:rgba(255,255,255,.2)}}
+/* 預約示範：往上開的選單投影壓在「管理」按鈕上，按鈕的 c 型上緣被陰影吃掉 → 投影收斂 */
+#menu{filter:drop-shadow(0 8px 22px rgba(0,0,0,.15)) drop-shadow(0 1px 3px rgba(0,0,0,.07))}
+/* 保鮮盒：寬螢幕上被拉成扁長條，盒蓋幾乎蓋住盒身、盒身的 c 型角只剩一條縫 → 限制寬度維持比例 */
+.bxs{max-width:420px;margin-left:auto;margin-right:auto}
+/* 題卡選項：舊版滑動底色的殘留元素（尺寸為 0、從不顯示），移除以免留下非 c 型圓角 */
+.bl{display:none}
+
+/* ===== v9 ===== */
+/* 選單圖示：位移（合攏）與旋轉分在兩層，各自用合成器動畫；兩段重疊銜接，不再有「合攏→停住→旋轉」的頓點；整體放慢 */
+header #mb i,header.dkh #mb i{background:transparent}
+#mb i{transform:none;transition:transform .34s cubic-bezier(.45,0,.2,1) .2s}
+#mb i::before{content:"";position:absolute;inset:0;background:var(--mu);transition:transform .38s cubic-bezier(.4,0,.2,1),background-color .3s linear}
+header.dkh #mb i::before{background:#a1a1a6}
+#mb.open i:first-child{top:14px;transform:translateY(3.5px)}
+#mb.open i:last-child{top:21px;transform:translateY(-3.5px)}
+#mb.open i{transition:transform .32s cubic-bezier(.4,0,.2,1)}
+#mb.open i:first-child::before{transform:rotate(45deg)}
+#mb.open i:last-child::before{transform:rotate(-45deg)}
+#mb.open i::before{transition:transform .52s cubic-bezier(.3,1.25,.45,1) .17s,background-color .3s linear}
+/* 行動選單：放慢；玻璃與連結仍是同一條透明度曲線（交叉淡化、不留空白），隱藏時間點與淡出長度一致 */
+#mm{transition:opacity .36s cubic-bezier(.4,0,.6,1),visibility 0s .36s}
+#mm.open{transition:opacity .44s cubic-bezier(.33,0,.2,1),visibility 0s}
+#mm a{transition:opacity .36s cubic-bezier(.4,0,.6,1),transform .36s cubic-bezier(.4,0,.6,1),filter .3s ease}
+#mm.open a{transition:opacity .44s cubic-bezier(.33,0,.2,1),transform .72s var(--ea) calc(var(--i)*40ms),filter .5s var(--ea) calc(var(--i)*40ms)}
+/* 開關選單時，頁首（深色區塊上）的顏色變化跟著選單同速淡換，不再瞬間翻白 */
+header.mx{transition:background-color .44s cubic-bezier(.33,0,.2,1),color .44s cubic-bezier(.33,0,.2,1)}
+header.mx .ab{transition:transform .6s var(--sp),background-color .44s cubic-bezier(.33,0,.2,1),color .44s cubic-bezier(.33,0,.2,1)}
+/* 「管理」選單：陰影改為選單內的靜態 c 型陰影層。
+   Safari 不會在「子元素正在動畫」時繪製父層的 drop-shadow（錄影中陰影一律晚 400 ms 才出現）；靜態陰影層隨選單一起出現、一起縮放 */
+#menu{filter:none}
+.mi{position:relative}
+.msh{position:absolute;inset:8px 0 -8px;pointer-events:none;filter:blur(11px)}
+.msh b{position:absolute;inset:0;background:rgba(0,0,0,.16)}
+.msh.t{inset:1px 0 -1px;filter:blur(1.5px)}
+.msh.t b{background:rgba(0,0,0,.07)}
+/* 肖像陰影：同樣改成靜態陰影層（按壓時一起縮小） */
+.avw{position:relative;filter:none}
+.avsh{position:absolute;inset:3px 0 -3px;pointer-events:none;filter:blur(4.5px);transition:transform .6s var(--sp)}
+.avsh b{position:absolute;inset:0;background:rgba(0,0,0,.13)}
+.avw:has(#av.dn) .avsh{transform:scale(.95);transition:transform .12s ease-out}
+@media (prefers-color-scheme:dark){.avsh{display:none}}
+/* 時段按鈕：選取時放大 1.06 倍，第一顆的左緣會超出外層的裁切範圍 → 裁切範圍向外留 6px（內容位置不變） */
+#edp>div{padding:0 6px;margin:0 -6px}
+
+/* ===== V2.0：內容、資訊架構與無障礙（不新增、不修改任何動效） ===== */
+/* 次要小字：淺色模式下 #86868b 對白底只有 3.5:1，改用 4.5:1 以上的灰；大標題的灰色第二行維持原樣 */
+:root{--g3:#6e6e73}
+@media (prefers-color-scheme:dark){:root{--g3:#98989d}}
+.dk{--g3:#a1a1a6}.ph{--g3:#6e6e73}
+.k,.st3 small,.row>span,.fh span,.fc,.c3 small,#qm,#hq,.trk span:not(.on),.rh small,.cps small,.chip i,.ch button small{color:var(--g3)}
+#rs{color:#5eb1ff}
+#frs{color:#0059b3}@media (prefers-color-scheme:dark){#frs{color:var(--ac)}}
+/* 精選作品 */
+.wks{display:grid;gap:12px;margin-top:24px}
+@media (min-width:1000px){.wks{grid-template-columns:repeat(3,1fr)}}
+.wk{display:flex;flex-direction:column}
+.wk .k{display:block;padding-right:40px;margin:0}
+.wk h3{font-size:22px;margin:10px 0 6px}
+.wk>p{font-size:15px;line-height:1.6;color:var(--mu);margin:0 0 16px}
+.wm{margin:auto 0 0;padding-top:12px;border-top:1px solid var(--ln);display:grid;gap:8px;font-size:13px;line-height:1.5}
+.wm div{display:grid;grid-template-columns:2.6em 1fr;gap:10px}
+.wm dt{color:var(--g3)}
+.wm dd{margin:0}
+.tg{display:inline-block;padding:2px 9px;border-radius:8px;background:var(--alt);font-weight:600;font-size:12px}
+/* 線索工作台：概念例句、作答後的延伸說明、結束頁的靜態分析 */
+.c3 em{display:block;font-style:normal;font-size:12px;line-height:1.5;color:var(--mu);margin-top:6px}
+.fx{display:block;margin-top:10px;font-size:14px;line-height:1.6;color:var(--mu)}
+.fx b{display:block;color:var(--tx);font-size:13px}
+.qr{margin:18px 0 22px;padding-top:16px;border-top:1px solid var(--ln)}
+.qr .k{margin:0 0 10px}
+.qrs{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+#sm .qrs small{display:block;margin:0;font-size:12px;color:var(--g3)}
+.qrs b{font-size:20px}
+.qrh{font-size:14px;font-weight:700;margin:16px 0 6px}
+.qrw{font-size:13px;line-height:1.55;color:var(--mu);margin:0 0 8px}
+.qrw b{color:var(--tx)}
+.qrt{font-size:14px;line-height:1.6;color:var(--mu);margin:0}
+/* 預約示範：目前時段不可選、操作紀錄、研究結果區 */
+.tc small{font-size:11px;margin-left:5px;opacity:.8}
+.tc.cur{opacity:.45;cursor:default}
+.blg{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:6px 14px;margin-top:14px;padding-top:12px;border-top:1px solid var(--ln);font-size:13px;color:var(--mu)}
+#blc{border:0;background:none;padding:0;color:var(--ac);font:inherit;font-weight:600}
+.rsx{margin-top:22px;padding-top:14px;border-top:1px solid var(--ln)}
+.rsx .k{margin:0 0 6px}
+.rsh{margin:0;font-weight:700}
+/* 冰箱：模擬標示 */
+.fdn{color:var(--mu);font-size:12.5px;line-height:1.55;margin:8px auto 0;max-width:30em}
+/* 報告：證據表、流程框架、模擬／實測分欄 */
+.bd .evt{width:100%;border-collapse:collapse;font-size:14px;line-height:1.5;margin:6px 0 2px}
+.evt th,.evt td{text-align:left;vertical-align:top;padding:7px 10px 7px 0;border-top:1px solid var(--ln);font-weight:400}
+.evt th{color:var(--tx);width:58%}
+.evt td{color:var(--mu)}
+.flow{border-left:2px solid var(--ln);padding-left:14px;margin:8px 0 4px}
+.bd .flow p{font-size:15px;line-height:1.6;margin:0 0 12px}
+.flow b{display:block;color:var(--tx)}
+.rs2{display:grid;gap:12px;margin-top:6px}
+@media (min-width:520px){.rs2{grid-template-columns:1fr 1fr}}
+.rs2>div{border-top:1px solid var(--ln);padding-top:8px}
+.rs2 small{font-size:12px;color:var(--g3)}
+.bd .rs2 p{font-size:15px;margin:2px 0 0}
+.bd b{color:var(--tx)}
+footer .fl{display:flex;flex-wrap:wrap;gap:6px 16px}
+/* 報告裡卡片內的段落：被「展開標籤」面板的通用規則（.pn p 透明度 0）一起隱藏——冰箱示範的標題與說明、比較卡的說明從未顯示過。
+   改為常駐顯示；它們所在的卡片本身仍照原樣隨報告淡入（沒有任何動畫被新增或修改） */
+.rp .bd>* p{opacity:1;transform:none}
+
+/* ===== 案例頁（沿用首頁設計系統；靜態樣式，不含任何動效） ===== */
+.hb>b a{color:inherit}
+.cs h1{font-size:clamp(40px,8.6vw,84px)}
+.lede{font-size:19px;font-weight:700;max-width:30em;margin:0 0 8px}
+.facts{display:grid;grid-template-columns:repeat(2,1fr);gap:16px 14px;border-top:1px solid var(--ln);padding-top:18px;margin-top:28px}
+@media (min-width:820px){.facts{grid-template-columns:repeat(4,1fr)}}
+.facts small{display:block;color:var(--g3);font-size:12px}
+.facts b{display:block;font-size:15px;line-height:1.45}
+.cbx{position:relative;background:var(--alt);border-radius:24px;padding:20px}
+.al .cbx{background:var(--cd)}
+.cbx>:first-child{margin-top:0}.cbx>:last-child{margin-bottom:0}
+.cbx .k{margin:0 0 8px}
+.cbx h3{font-size:18px;margin:0 0 6px}
+.cbx p{font-size:15px;line-height:1.6;color:var(--mu);margin:0}
+.note{margin-top:22px}
+.note p{color:var(--tx)}
+.grid2,.grid3,.grid4{display:grid;gap:12px;margin-top:18px}
+@media (min-width:700px){.grid2{grid-template-columns:1fr 1fr}.grid3{grid-template-columns:repeat(3,1fr)}.grid4{grid-template-columns:repeat(2,1fr)}}
+@media (min-width:1000px){.grid4{grid-template-columns:repeat(4,1fr)}}
+.ev b{display:block;font-size:15px;margin-bottom:2px}
+.ev .y{color:#248a3d}.ev .p{color:#b25000}.ev .n{color:#d70015}
+@media (prefers-color-scheme:dark){.ev .y{color:#30d158}.ev .p{color:#ff9f0a}.ev .n{color:#ff6961}}
+.cs-s .h2{font-size:clamp(30px,5vw,50px)}
+.prose{max-width:40em}
+.prose p,.prose li{color:var(--mu)}
+.prose li{margin-bottom:6px}
+.tblw{overflow-x:auto;margin-top:18px;-webkit-overflow-scrolling:touch}
+.tbl{width:100%;border-collapse:collapse;font-size:14px;line-height:1.55}
+.tbl th,.tbl td{text-align:left;vertical-align:top;padding:10px 14px 10px 0;border-top:1px solid var(--ln)}
+.tbl thead th{color:var(--g3);font-weight:600;font-size:12px;border-top:0;padding-top:0}
+.tbl tbody th{font-weight:600;min-width:5.5em}
+.tbl td{color:var(--mu)}
+.tbl.w td{min-width:7em}
+/* 窄螢幕：多欄表格改成逐列的區塊，每格前面標上欄名，不必左右捲動 */
+@media (max-width:699px){.tbl.w thead{display:none}.tbl.w,.tbl.w tbody,.tbl.w tr,.tbl.w th,.tbl.w td{display:block}
+.tbl.w tr{border-top:1px solid var(--ln);padding:10px 0}.tbl.w th,.tbl.w td{border:0;padding:2px 0;min-width:0}
+.tbl.w th{font-size:15px;margin-bottom:4px}.tbl.w td::before{content:attr(data-l)"　";color:var(--g3);font-size:12px;font-weight:600}}
+.tbl code{font-size:12.5px}
+.figs{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:20px}
+@media (min-width:820px){.figs{grid-template-columns:repeat(3,1fr)}.figs.f5{grid-template-columns:repeat(5,1fr)}}
+.figs.one{grid-template-columns:1fr}
+@media (min-width:820px){.figs.two{grid-template-columns:2fr 1fr}}
+figure{margin:0}
+.shot{position:relative;background:var(--alt);border-radius:24px;overflow:hidden}
+.shot>.rg{opacity:1;background:var(--ln);z-index:1}
+.shot img{display:block;width:100%;height:auto}
+figcaption{font-size:13px;line-height:1.5;color:var(--mu);margin-top:8px}
+.steps{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:10px 0 4px}
+.steps .tg{font-size:13px;padding:6px 12px;background:var(--cd)}
+.steps i{font-style:normal;color:var(--g3)}
+.flowrow{margin-top:16px}
+.flowrow>b{display:block;font-size:14px}
+pre.code{font:12.5px/1.6 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;white-space:pre-wrap;word-break:break-all;margin:10px 0 0;color:var(--tx)}
+.toc{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px}
+.toc .tg{font-weight:500;font-size:13px;padding:6px 12px;color:var(--tx)}
+.al .toc .tg{background:var(--cd)}
+.sws{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:18px}
+@media (min-width:820px){.sws{grid-template-columns:repeat(3,1fr)}}
+.swr{display:flex;gap:6px;margin-bottom:10px}
+.sw{position:relative;display:block;width:44px;height:30px;border-radius:8px}
+.sw>.rg{opacity:1;background:rgba(127,127,127,.35)}
+.swc b{display:block;font-size:14px}
+.swc small{display:block;font-size:12.5px;color:var(--mu);line-height:1.5}
+.bug{margin-top:12px}
+.bug h3{font-size:17px;line-height:1.45;margin:0 0 10px}
+.bug h3 small{display:block;font-size:12px;font-weight:600;color:var(--g3);letter-spacing:.04em}
+.bug dl{display:grid;gap:6px;margin:0;font-size:14px;line-height:1.55}
+.bug dl div{display:grid;grid-template-columns:4.8em 1fr;gap:10px}
+.bug dt{color:var(--g3)}
+.bug dd{margin:0;color:var(--mu)}
+.svgfig svg{display:block;width:100%;height:auto}
+.svgfig .o1{fill:none;stroke:var(--ac);stroke-width:1.5;stroke-dasharray:5 4}
+.svgfig .o2{fill:rgba(127,127,127,.14);stroke:var(--tx);stroke-width:1.5}
+.svgfig text{font-size:11px;fill:var(--mu)}
+.svgfig .o1,.svgfig .o2{vector-effect:non-scaling-stroke}
+.svgfig .z text{font-size:5px}
+.svgfig .pt{fill:var(--tx)}
+.svgfig .pa{fill:var(--ac)}
+.nx{margin-top:22px}
+.nx .kc h3{font-size:21px}
+.nx .kc p{font-size:14px;color:var(--mu);margin:6px 40px 0 0}
+.lst{padding-left:1.2em;margin:14px 0 0}
+.lst li{color:var(--mu);margin-bottom:8px}
+</style></head><body>
+<a class="skip" href="#main">跳至主要內容</a>
+<header><i id="bar"></i><div class="hb"><b><a href="index.html">Lucius.</a></b><nav id="lk" aria-label="作品集頁面"><i class="pl"></i><a href="work-booking.html">預約流程</a><a href="work-fridge.html">冰箱辨識</a><a href="work-site.html">網站系統</a><a href="process.html" class="on" aria-current="page">實作紀錄</a></nav><a class="ab press" href="index.html#work">← 作品集</a></div></header>
+<main id="main">
+<section id="top" class="hero s pr cs"><div class="w"><p class="k rv">Process &amp; Changelog</p>
+<h1><span class="ln"><span style="--i:0">版本、除錯</span></span><span class="ln"><span class="g" style="--i:1">與協作紀錄。</span></span></h1>
+<p class="lede rv" style="--i:3">每一次修改都記下：看到什麼問題、在什麼條件下發生、原因、怎麼改、怎麼驗收。</p><p class="mu rv" style="--i:4;max-width:34em">紀錄涵蓋 2026 年 11 月 18 日起的修改；在那之前的初版不在這份紀錄裡。時間為檔案產生的時間（台灣時間）。</p><div class="rv" style="--i:5;margin-top:20px"><a class="btn press" href="#bugs">看除錯紀錄 ↓</a><a class="lnk" href="#ai">AI 協作分工 ↓</a></div><div class="facts rv" style="--i:6"><div><small>版本</small><b>12 個版本＋V2.0</b></div><div><small>除錯紀錄</small><b>28 筆</b></div><div><small>實機測試</small><b>iPhone Safari（Lucius）</b></div><div><small>自動化測試</small><b>Playwright（Chromium）</b></div></div></div></section>
+<section id="ai" class="s cs-s"><div class="w"><p class="k rv">Collaboration</p><h2 class="h2 rv">誰做了什麼，<span>寫清楚。</span></h2><div class="prose rv"><p>這個網站的程式由 AI（Anthropic 的 Claude）依我的需求撰寫。我負責提出問題與需求、決定設計方向、在手機上實際測試，以及判斷結果是否通過。AI 寫的程式不聲稱是手寫；沒有親自執行的使用者研究，也不寫成已完成。</p></div><div class="tblw rv"><table class="tbl w"><thead><tr><th scope="col">工作類型</th><th scope="col">我（Lucius）</th><th scope="col">AI（Claude）</th></tr></thead><tbody><tr><th scope="row">問題發現</th><td data-l="我（Lucius）">在 iPhone Safari 實際操作、螢幕錄影，指出看到的問題，例如選單圖示動畫生硬、10:00 時段按鈕被裁切、「管理」選單的陰影延遲出現</td><td data-l="AI（Claude）">逐格分析錄影與截圖，找出技術原因</td></tr><tr><th scope="row">設計方向</th><td data-l="我（Lucius）">決定規則：所有元件使用參考圖 c 的連續圓角；刪除「減少動態」選項；未標記時第三盒才找到；既有動效不可更動</td><td data-l="AI（Claude）">提出可行的實作方式與取捨</td></tr><tr><th scope="row">介面與內容</th><td data-l="我（Lucius）">決定保留或退回哪個版本（例如第 11 版的動效加強，試用後決定退回第 10 版）；決定 V2.0 的範圍</td><td data-l="AI（Claude）">提出版面與元件方案；起草 V2.0 案例頁與報告補充文字</td></tr><tr><th scope="row">程式</th><td data-l="我（Lucius）">—</td><td data-l="AI（Claude）">撰寫全部 HTML／CSS／JavaScript</td></tr><tr><th scope="row">視覺驗收</th><td data-l="我（Lucius）">在手機與電腦上檢查並決定是否通過（11/19 確認手機版通過後，才開始調整電腦版）</td><td data-l="AI（Claude）">自動化截圖、逐格量測輔助</td></tr><tr><th scope="row">除錯</th><td data-l="我（Lucius）">回報現象與發生條件</td><td data-l="AI（Claude）">分析原因、修正，並撰寫自動化測試確認</td></tr><tr><th scope="row">研究報告</th><td data-l="我（Lucius）">四篇報告的生活觀察（冰箱案例為情境推演）</td><td data-l="AI（Claude）">V2.0 補充研究問題、證據現況、測試規劃與限制</td></tr><tr><th scope="row">部署</th><td data-l="我（Lucius）">自己登入 GitHub 帳號</td><td data-l="AI（Claude）">透過瀏覽器上傳檔案，核對線上檔案的雜湊值</td></tr></tbody></table></div></div></section>
+<section id="timeline" class="s cs-s al"><div class="w"><p class="k rv">Timeline</p><h2 class="h2 rv">每一版，<span>為了什麼而改。</span></h2><div class="tblw rv"><table class="tbl w"><thead><tr><th scope="col">版本</th><th scope="col">時間</th><th scope="col">內容</th><th scope="col">依據</th></tr></thead><tbody><tr><th scope="row">V0</th><td data-l="時間">11/18 以前</td><td data-l="內容">個人網站初版：思考方式、UX 方向、互動練習、四篇報告</td><td data-l="依據">—</td></tr><tr><th scope="row">V1</th><td data-l="時間">11/18 19:23</td><td data-l="內容">全站改用 c 型連續圓角（依參考圖 c）；降低捲動時的動畫成本</td><td data-l="依據">需求</td></tr><tr><th scope="row">V2</th><td data-l="時間">11/18 19:52</td><td data-l="內容">依 19:02 iPhone 錄影修正按壓回饋、選單、滑塊、報告展開等問題；跨裝置適配</td><td data-l="依據">BUG-001–005</td></tr><tr><th scope="row">V3</th><td data-l="時間">11/18 20:14</td><td data-l="內容">手風琴放慢；新的保鮮盒設計；完全刪除「減少動態」選項</td><td data-l="依據">需求</td></tr><tr><th scope="row">V4</th><td data-l="時間">11/18 20:52</td><td data-l="內容">Safari 穩定版：滑塊改用 SVG、收合改為先淡出</td><td data-l="依據">BUG-006–007</td></tr><tr><th scope="row">V5</th><td data-l="時間">11/18 23:37</td><td data-l="內容">換上不裁切的新肖像；加入克制的模糊與動態模糊</td><td data-l="依據">需求</td></tr><tr><th scope="row">V6</th><td data-l="時間">11/19 00:17</td><td data-l="內容">依 21:33 錄影逐格修正；未標記改為「第三盒才找到」</td><td data-l="依據">BUG-008–009</td></tr><tr><th scope="row">V7</th><td data-l="時間">11/19 06:13</td><td data-l="內容">捲動順暢度；選單開啟閃動</td><td data-l="依據">BUG-010</td></tr><tr><th scope="row">V8</th><td data-l="時間">11/19 06:49</td><td data-l="內容">c 型圓角完整呈現：不被裁切、不被遮擋</td><td data-l="依據">BUG-011–014</td></tr><tr><th scope="row">V9</th><td data-l="時間">11/19 07:11</td><td data-l="內容">選單圖示放慢；Safari 陰影延遲；10:00 按鈕裁切</td><td data-l="依據">BUG-015–018</td></tr><tr><th scope="row">V10</th><td data-l="時間">11/19 07:40</td><td data-l="內容">獨立網站：不需登入即可瀏覽、與第三方平台無關；網站圖示</td><td data-l="依據">需求</td></tr><tr><th scope="row">V11</th><td data-l="時間">11/19 15:13</td><td data-l="內容">動效加強（標題遮罩、數字捲動、箭頭微動）→ 試用後決定退回 V10</td><td data-l="依據">決定：退回</td></tr><tr><th scope="row">V12</th><td data-l="時間">11/19 19:17</td><td data-l="內容">電腦版圓角適配（手機版逐位元組不變）；部署到 GitHub Pages</td><td data-l="依據">BUG-019</td></tr><tr><th scope="row">V2.0</th><td data-l="時間">11/22</td><td data-l="內容">升學作品集版：精選作品、三個案例頁、實作紀錄；預約狀態、報告與無障礙修正；不修改任何動效</td><td data-l="依據">BUG-020–028</td></tr></tbody></table></div></div></section>
+<section id="bugs" class="s cs-s"><div class="w"><p class="k rv">Bug log</p><h2 class="h2 rv">問題、原因、修改，<span>還有怎麼證明修好了。</span></h2><div class="prose rv"><p>V1–V12 的問題多半來自我在 iPhone Safari 上的實機錄影，11/19 我確認手機版通過；V2.0 的問題來自規格檢查與自動化測試。「動效變更」一欄標示該次修改是否動到動畫：V2.0 的所有修改都沒有。</p></div><div class="grid2"><article class="cbx bug rv" id="bug-001"><h3><small>BUG-001・V2</small>按下按鈕時出現灰色矩形，按壓回饋不明顯</h3><dl><div><dt>問題現象</dt><dd>點按按鈕時出現系統的灰色矩形高亮；按壓縮放有時不出現。</dd></div><div><dt>發生條件</dt><dd>iPhone，App 內開啟網頁；11/18 19:02 錄影。</dd></div><div><dt>原因分析</dt><dd>iOS 預設的點擊高亮；:active 在沒有觸控監聽時不觸發；原本的縮放不等比（0.94 × 0.9），持續 1.4 秒。</dd></div><div><dt>修改方法</dt><dd>移除系統高亮；按下時等比縮小到 0.95、放開回彈，c 型輪廓不變形。</dd></div><div><dt>驗收結果</dt><dd>逐格截圖比對；11/19 手機版實機驗收通過。</dd></div><div><dt>動效變更</dt><dd>有（依需求修正）</dd></div></dl></article><article class="cbx bug rv" id="bug-002"><h3><small>BUG-002・V2</small>選單圖示開合時出現「>」形</h3><dl><div><dt>問題現象</dt><dd>兩條線在變成 × 的途中先變成「>」。</dd></div><div><dt>發生條件</dt><dd>同上錄影。</dd></div><div><dt>原因分析</dt><dd>合攏與旋轉同時進行。</dd></div><div><dt>修改方法</dt><dd>先合攏、再旋轉（V9 再改成分層重疊銜接）。</dd></div><div><dt>驗收結果</dt><dd>逐格截圖。</dd></div><div><dt>動效變更</dt><dd>有</dd></div></dl></article><article class="cbx bug rv" id="bug-003"><h3><small>BUG-003・V2</small>分段控制的滑塊移動時，文字消失</h3><dl><div><dt>問題現象</dt><dd>切換分段時，滑塊下的文字短暫不見。</dd></div><div><dt>發生條件</dt><dd>同上錄影。</dd></div><div><dt>原因分析</dt><dd>反色文字層沒有跟著滑塊一起裁切。</dd></div><div><dt>修改方法</dt><dd>反色層跟隨滑塊（V4 改為差值混合）。</dd></div><div><dt>驗收結果</dt><dd>逐格截圖。</dd></div><div><dt>動效變更</dt><dd>有</dd></div></dl></article><article class="cbx bug rv" id="bug-004"><h3><small>BUG-004・V2</small>展開報告時先出現一張空白卡片</h3><dl><div><dt>問題現象</dt><dd>報告卡先長高，內容才出現。</dd></div><div><dt>發生條件</dt><dd>同上錄影。</dd></div><div><dt>原因分析</dt><dd>高度動畫與內容淡入各自進行，不同步。</dd></div><div><dt>修改方法</dt><dd>由腳本逐格驅動高度，同一格同步捲動位置，內容即時淡入。</dd></div><div><dt>驗收結果</dt><dd>逐格截圖。</dd></div><div><dt>動效變更</dt><dd>有</dd></div></dl></article><article class="cbx bug rv" id="bug-005"><h3><small>BUG-005・V2</small>捲動途中區塊尺寸突然改變</h3><dl><div><dt>問題現象</dt><dd>往下捲時頁面跳動。</dd></div><div><dt>發生條件</dt><dd>iPhone Safari（沒有捲動錨定）。</dd></div><div><dt>原因分析</dt><dd>content-visibility 讓畫面外的區塊延後排版，捲到時才算出真正的高度。</dd></div><div><dt>修改方法</dt><dd>移除這項最佳化。</dd></div><div><dt>驗收結果</dt><dd>11/19 手機版實機驗收通過。</dd></div><div><dt>動效變更</dt><dd>無</dd></div></dl></article><article class="cbx bug rv" id="bug-006"><h3><small>BUG-006・V4</small>Safari 上滑塊出現殘影、邊緣被切平</h3><dl><div><dt>問題現象</dt><dd>分段控制的滑塊拖出殘影，邊緣變直。</dd></div><div><dt>發生條件</dt><dd>Safari；11/18 20:02 錄影。</dd></div><div><dt>原因分析</dt><dd>滑塊由偽元素繪製並繼承 CSS 變數的路徑，WebKit 不重繪。</dd></div><div><dt>修改方法</dt><dd>每個分段控制改用一個 inline SVG，逐格改寫路徑；文字以 mix-blend-mode: difference 自動反色；所有 c 型裁切直接寫在元素上。</dd></div><div><dt>驗收結果</dt><dd>逐格截圖；自動化量測滑塊不越界。</dd></div><div><dt>動效變更</dt><dd>有</dd></div></dl></article><article class="cbx bug rv" id="bug-007"><h3><small>BUG-007・V4</small>收合時，還看得到的按鈕被直接切掉</h3><dl><div><dt>問題現象</dt><dd>面板收合時，按鈕被高度一刀切斷。</dd></div><div><dt>發生條件</dt><dd>Safari 錄影。</dd></div><div><dt>原因分析</dt><dd>收合與淡出同時開始。</dd></div><div><dt>修改方法</dt><dd>先淡出、再收合；展開完成後內容才淡入。</dd></div><div><dt>驗收結果</dt><dd>逐格截圖。</dd></div><div><dt>動效變更</dt><dd>有</dd></div></dl></article><article class="cbx bug rv" id="bug-008"><h3><small>BUG-008・V6</small>行動選單開啟時，兩層文字疊在一起</h3><dl><div><dt>問題現象</dt><dd>頁面文字和選單連結同時出現、互相重疊。</dd></div><div><dt>發生條件</dt><dd>11/18 21:33 錄影逐格。</dd></div><div><dt>原因分析</dt><dd>玻璃背景與連結同時淡入。</dd></div><div><dt>修改方法</dt><dd>玻璃先到、文字後到；關閉時文字先走、玻璃後走（V7、V9 再調整為同一條透明度曲線的交叉淡化）。</dd></div><div><dt>驗收結果</dt><dd>逐格截圖確認沒有空白或重疊的畫格。</dd></div><div><dt>動效變更</dt><dd>有</dd></div></dl></article><article class="cbx bug rv" id="bug-009"><h3><small>BUG-009・V6</small>預約示範切換步驟時，有一瞬間整塊空白</h3><dl><div><dt>問題現象</dt><dd>按下修改後，約 0.25 秒內什麼都沒有。</dd></div><div><dt>發生條件</dt><dd>同上錄影。</dd></div><div><dt>原因分析</dt><dd>舊按鈕淡出完成後，新內容才開始淡入。</dd></div><div><dt>修改方法</dt><dd>兩者重疊；下拉選單先淡出，再收合容器。</dd></div><div><dt>驗收結果</dt><dd>自動化量測：切換過程中任何時刻都有內容可見。</dd></div><div><dt>動效變更</dt><dd>有</dd></div></dl></article><article class="cbx bug rv" id="bug-010"><h3><small>BUG-010・V7</small>捲動不順，選單開啟的瞬間閃一下</h3><dl><div><dt>問題現象</dt><dd>捲動時卡頓；打開選單時畫面閃白。</dd></div><div><dt>發生條件</dt><dd>11/19 00:06 錄影。</dd></div><div><dt>原因分析</dt><dd>進場動畫的模糊與縮放迫使 iPhone 每格重新繪製文字；視差由 JavaScript 逐格追趕捲動；選單玻璃與連結的透明度曲線不同。</dd></div><div><dt>修改方法</dt><dd>進場不再動畫模糊與縮放；視差與進度條改用瀏覽器的捲動時間軸；選單改為同一條透明度曲線的交叉淡化。</dd></div><div><dt>驗收結果</dt><dd>效能追蹤比對；逐格檢查空白畫格。</dd></div><div><dt>動效變更</dt><dd>有</dd></div></dl></article><article class="cbx bug rv" id="bug-011"><h3><small>BUG-011・V8</small>c 型圓角的邊緣被削掉最多 0.5px</h3><dl><div><dt>問題現象</dt><dd>部分元件邊緣有一條細縫。</dd></div><div><dt>發生條件</dt><dd>小數寬度的元件。</dd></div><div><dt>原因分析</dt><dd>offsetWidth 只回傳整數，輪廓比元件小。</dd></div><div><dt>修改方法</dt><dd>改用 ResizeObserver 的 borderBoxSize（小數尺寸）。</dd></div><div><dt>驗收結果</dt><dd>自動化比對輪廓與元件邊界。</dd></div><div><dt>動效變更</dt><dd>無</dd></div></dl></article><article class="cbx bug rv" id="bug-012"><h3><small>BUG-012・V8</small>題卡上方的圓角看起來被切平</h3><dl><div><dt>問題現象</dt><dd>線索工作台的上緣像一條直線。</dd></div><div><dt>發生條件</dt><dd>淺色模式。</dd></div><div><dt>原因分析</dt><dd>投影被 clip-path 一起裁掉，上緣又和背景同色。</dd></div><div><dt>修改方法</dt><dd>卡片外加一層獨立的 c 型陰影；沿 c 型邊緣加細線。</dd></div><div><dt>驗收結果</dt><dd>截圖放大比對；11/19 手機版實機驗收通過。</dd></div><div><dt>動效變更</dt><dd>無</dd></div></dl></article><article class="cbx bug rv" id="bug-013"><h3><small>BUG-013・V8</small>肖像的 c 型四角溶進背景</h3><dl><div><dt>問題現象</dt><dd>看不出肖像有圓角。</dd></div><div><dt>發生條件</dt><dd>淺色模式（白背景）、深色模式（黑西裝）。</dd></div><div><dt>原因分析</dt><dd>照片邊緣與背景同色。</dd></div><div><dt>修改方法</dt><dd>c 型細線框；淺色模式加柔和陰影。</dd></div><div><dt>驗收結果</dt><dd>截圖放大比對；11/19 手機版實機驗收通過。</dd></div><div><dt>動效變更</dt><dd>無</dd></div></dl></article><article class="cbx bug rv" id="bug-014"><h3><small>BUG-014・V8</small>比較卡在白色報告卡裡看不見邊緣</h3><dl><div><dt>問題現象</dt><dd>比較卡和外層卡片連成一片。</dd></div><div><dt>發生條件</dt><dd>淺色模式。</dd></div><div><dt>原因分析</dt><dd>兩者都是白底。</dd></div><div><dt>修改方法</dt><dd>比較卡改用淺灰底。</dd></div><div><dt>驗收結果</dt><dd>截圖比對。</dd></div><div><dt>動效變更</dt><dd>無</dd></div></dl></article><article class="cbx bug rv" id="bug-015"><h3><small>BUG-015・V9</small>「管理」選單的陰影晚約 400ms 才出現</h3><dl><div><dt>問題現象</dt><dd>選單先出現，陰影之後才補上。</dd></div><div><dt>發生條件</dt><dd>Safari；11/19 07:00 錄影。</dd></div><div><dt>原因分析</dt><dd>Safari 在子元素動畫進行時，不繪製父層的 drop-shadow。</dd></div><div><dt>修改方法</dt><dd>改為選單內的靜態 c 型陰影層，與選單同時出現、一起縮放。</dd></div><div><dt>驗收結果</dt><dd>逐格截圖：第一格就有陰影。</dd></div><div><dt>動效變更</dt><dd>無（陰影外觀不變）</dd></div></dl></article><article class="cbx bug rv" id="bug-016"><h3><small>BUG-016・V9</small>10:00 時段按鈕被裁切</h3><dl><div><dt>問題現象</dt><dd>選取的第一顆時段按鈕左緣被切掉。</dd></div><div><dt>發生條件</dt><dd>Safari 截圖。</dd></div><div><dt>原因分析</dt><dd>選取的時段放大 1.06 倍，超出外層的裁切範圍。</dd></div><div><dt>修改方法</dt><dd>裁切範圍向外留 6px，內容位置不變。</dd></div><div><dt>驗收結果</dt><dd>自動化檢查按鈕完整顯示。</dd></div><div><dt>動效變更</dt><dd>無</dd></div></dl></article><article class="cbx bug rv" id="bug-017"><h3><small>BUG-017・V9</small>選單圖示的動畫生硬</h3><dl><div><dt>問題現象</dt><dd>兩條線「合攏 → 停住 → 旋轉」。</dd></div><div><dt>發生條件</dt><dd>Safari 錄影。</dd></div><div><dt>原因分析</dt><dd>位移與旋轉在同一層依序進行，中間有停頓。</dd></div><div><dt>修改方法</dt><dd>位移與旋轉分成兩層，重疊銜接、整體放慢。</dd></div><div><dt>驗收結果</dt><dd>26 項自動化選單測試。</dd></div><div><dt>動效變更</dt><dd>有（依需求放慢）</dd></div></dl></article><article class="cbx bug rv" id="bug-018"><h3><small>BUG-018・V9</small>開關選單時，頁首與「關於我」瞬間翻色</h3><dl><div><dt>問題現象</dt><dd>在深色區塊上開選單，頁首一格內從黑變白。</dd></div><div><dt>發生條件</dt><dd>捲到深色區塊時。</dd></div><div><dt>原因分析</dt><dd>頁首顏色立即切換，沒有跟著選單淡換。</dd></div><div><dt>修改方法</dt><dd>頁首顏色隨選單同速淡換（0.44s）。</dd></div><div><dt>驗收結果</dt><dd>逐格量測顏色變化。</dd></div><div><dt>動效變更</dt><dd>有</dd></div></dl></article><article class="cbx bug rv" id="bug-019"><h3><small>BUG-019・V12</small>電腦版的圓角沒有適配</h3><dl><div><dt>問題現象</dt><dd>寬螢幕上大面積元件的圓角顯得太小；滑塊與軌道不同心；125%／150% 縮放時細線模糊。</dd></div><div><dt>發生條件</dt><dd>電腦瀏覽器、Windows 縮放。</dd></div><div><dt>原因分析</dt><dd>所有尺寸共用手機的圓角數值；細線沒有對齊裝置像素。</dd></div><div><dt>修改方法</dt><dd>視窗 ≥ 820px 起圓角隨寬度連續放大（最多 1.3 倍）；滑塊＝軌道 − 4px；細線對齊整數裝置像素；聚焦框跟隨實際形狀。</dd></div><div><dt>驗收結果</dt><dd>手機寬度的輸出與前一版逐位元組比對完全相同；桌機尺寸逐一截圖。</dd></div><div><dt>動效變更</dt><dd>無（只改形狀）</dd></div></dl></article><article class="cbx bug rv" id="bug-020"><h3><small>BUG-020・V2.0</small>預約「重新體驗」後，選取的時段與完成訊息沒有恢復</h3><dl><div><dt>問題現象</dt><dd>重設後預約時間回到 10:00，但再次修改時仍選著上一次的時段。</dd></div><div><dt>發生條件</dt><dd>任何裝置，完成一次修改後重設。</dd></div><div><dt>原因分析</dt><dd>畫面文字與內部選取狀態使用不同的重設流程。</dd></div><div><dt>修改方法</dt><dd>統一由 reset() 恢復所有欄位。</dd></div><div><dt>驗收結果</dt><dd>連續執行選取、取消、確認、重設與版本切換，畫面與內部資料一致。</dd></div><div><dt>動效變更</dt><dd>無</dd></div></dl></article><article class="cbx bug rv" id="bug-021"><h3><small>BUG-021・V2.0</small>取消修改後，下次打開仍是上次的選取</h3><dl><div><dt>問題現象</dt><dd>選了 16:00 再取消，下次打開時 16:00 仍被選取。</dd></div><div><dt>發生條件</dt><dd>任何裝置。</dd></div><div><dt>原因分析</dt><dd>「取消」只切換畫面，沒有還原選取。</dd></div><div><dt>修改方法</dt><dd>進入修改時記下選取，取消時還原。</dd></div><div><dt>驗收結果</dt><dd>自動化測試。</dd></div><div><dt>動效變更</dt><dd>無</dd></div></dl></article><article class="cbx bug rv" id="bug-022"><h3><small>BUG-022・V2.0</small>可以把預約「改成」原本的 10:00</h3><dl><div><dt>問題現象</dt><dd>選 10:00 並確認，畫面顯示「已改到明天 10:00」。</dd></div><div><dt>發生條件</dt><dd>任何裝置。</dd></div><div><dt>原因分析</dt><dd>目前時段也是可選的選項。</dd></div><div><dt>修改方法</dt><dd>目前時段標示「目前」並設為不可選。</dd></div><div><dt>驗收結果</dt><dd>點按與鍵盤都無法選取。</dd></div><div><dt>動效變更</dt><dd>無</dd></div></dl></article><article class="cbx bug rv" id="bug-023"><h3><small>BUG-023・V2.0</small>選單交接的 130ms 內按「重新體驗」，會跳回修改步驟</h3><dl><div><dt>問題現象</dt><dd>重設後，畫面又自己進入修改步驟。</dd></div><div><dt>發生條件</dt><dd>快速操作時。</dd></div><div><dt>原因分析</dt><dd>延遲進入修改的計時器沒有被取消。</dd></div><div><dt>修改方法</dt><dd>狀態檢查＋計時代號，重設時作廢。</dd></div><div><dt>驗收結果</dt><dd>自動化重現後確認維持初始狀態。</dd></div><div><dt>動效變更</dt><dd>無（130ms 不變）</dd></div></dl></article><article class="cbx bug rv" id="bug-024"><h3><small>BUG-024・V2.0</small>完成後再點到「確認修改」仍會計數</h3><dl><div><dt>問題現象</dt><dd>快速連點時，操作次數多算。</dd></div><div><dt>發生條件</dt><dd>快速連點。</dd></div><div><dt>原因分析</dt><dd>按鈕不檢查目前步驟。</dd></div><div><dt>修改方法</dt><dd>每個按鈕只在對應的步驟有效。</dd></div><div><dt>驗收結果</dt><dd>連點 6 次只送出 1 次。</dd></div><div><dt>動效變更</dt><dd>無</dd></div></dl></article><article class="cbx bug rv" id="bug-025"><h3><small>BUG-025・V2.0</small>收合中的按鈕仍可被 Tab 聚焦</h3><dl><div><dt>問題現象</dt><dd>用鍵盤 Tab 時，焦點跑進沒有展開的報告或沒有打開的選單，看不到焦點在哪裡。</dd></div><div><dt>發生條件</dt><dd>鍵盤操作。</dd></div><div><dt>原因分析</dt><dd>內容只在視覺上隱藏。</dd></div><div><dt>修改方法</dt><dd>收合內容設為 inert；收合時焦點移到合理位置（報告標題、結果訊息、開啟它的按鈕）。</dd></div><div><dt>驗收結果</dt><dd>鍵盤自動化測試。</dd></div><div><dt>動效變更</dt><dd>無</dd></div></dl></article><article class="cbx bug rv" id="bug-026"><h3><small>BUG-026・V2.0</small>冰箱示範的標題、說明與比較卡說明從未顯示</h3><dl><div><dt>問題現象</dt><dd>冰箱示範上方與比較卡中有幾塊空白。</dd></div><div><dt>發生條件</dt><dd>所有裝置。</dd></div><div><dt>原因分析</dt><dd>「說明標籤」面板的通用樣式（面板內段落預設透明）也套到了報告裡的卡片。</dd></div><div><dt>修改方法</dt><dd>報告卡片內的段落常駐顯示；所在卡片仍照原樣隨報告淡入。</dd></div><div><dt>驗收結果</dt><dd>自動化檢查：展開的報告裡沒有透明的文字。</dd></div><div><dt>動效變更</dt><dd>無</dd></div></dl></article><article class="cbx bug rv" id="bug-027"><h3><small>BUG-027・V2.0</small>比較卡的「已標記」完成後仍顯示「尚未完成」</h3><dl><div><dt>問題現象</dt><dd>數字已經出現，下方仍寫著「尚未完成」。</dd></div><div><dt>發生條件</dt><dd>完成已標記模式後。</dd></div><div><dt>原因分析</dt><dd>數字下方的說明是固定文字。</dd></div><div><dt>修改方法</dt><dd>依是否完成更新說明。</dd></div><div><dt>驗收結果</dt><dd>截圖確認。</dd></div><div><dt>動效變更</dt><dd>無</dd></div></dl></article><article class="cbx bug rv" id="bug-028"><h3><small>BUG-028・V2.0</small>淺色模式部分小字的對比不足</h3><dl><div><dt>問題現象</dt><dd>眉標、卡片標籤等 11–13px 灰字對比只有 3.3–3.6:1；「重新體驗」3.9:1、冰箱「重新操作」4.3:1。</dd></div><div><dt>發生條件</dt><dd>淺色模式。</dd></div><div><dt>原因分析</dt><dd>#86868B 被用在小字上。</dd></div><div><dt>修改方法</dt><dd>小字改用新增的 --g3（5.1:1）；兩個按鈕改色；深色模式同步檢查。</dd></div><div><dt>驗收結果</dt><dd>自動化對比檢查（淺色、深色，手機與桌機寬度）。</dd></div><div><dt>動效變更</dt><dd>無</dd></div></dl></article></div></div></section>
+<section id="tests" class="s cs-s al"><div class="w"><p class="k rv">Testing</p><h2 class="h2 rv">修改前先記錄，<span>修改後逐項比對。</span></h2><div class="tblw rv"><table class="tbl w"><thead><tr><th scope="col">檢查</th><th scope="col">結果</th></tr></thead><tbody><tr><th scope="row">動效基準</th><td data-l="結果">修改前從程式讀出所有 transition、animation、@keyframes 與 JavaScript 動畫設定，共 187 項</td></tr><tr><th scope="row">動效比對</th><td data-l="結果">187 項全部相同（持續時間、曲線、延遲、關鍵影格、animate／補間設定）；新增 1 個複製按鈕的文字還原計時（1.6 秒，非動畫）</td></tr><tr><th scope="row">既有動效測試</th><td data-l="結果">修改前後用同一組測試：選單 26／26、冰箱 60／60、圓角裁切與版面寬度與修改前相同；動效回歸 23／24——換題重設時結果頁變長（799px 對 346px），單格最大位移超過舊門檻，但佔總距離的比例相同（兩者都約 8.4%），曲線與時間未改</td></tr><tr><th scope="row">V2.0 功能測試</th><td data-l="結果">預約狀態與操作紀錄、練習計分與重設、鍵盤與焦點、對話框，共 100 項，全部通過</td></tr><tr><th scope="row">文字對比</th><td data-l="結果">淺色、深色模式在手機與桌機寬度檢查；剩餘項目為停用按鈕（WCAG 豁免）與差值混合文字（工具誤判）</td></tr><tr><th scope="row">實機驗收</th><td data-l="結果">V2.0 尚待我在 iPhone Safari 上實機確認；iPad、Android、macOS Safari、Edge 尚未測試</td></tr></tbody></table></div></div></section>
+<section id="todo" class="s cs-s"><div class="w"><p class="k rv">Open issues</p><h2 class="h2 rv">還沒做完的，<span>列出來。</span></h2><ul class="lst prose rv"><li>「減少動態」替代模式：依「不修改既有動效」原則不在本次修改，等討論後另外設計。</li><li>預約原型的使用者測試（規劃見 <a href="work-booking.html#test">案例 01</a>）。</li><li>冰箱的研究模式（固定內容、平衡順序）尚未實作。</li><li>四篇報告缺少的原始證據：素描原稿與掃描設定、肥皂測試的照片與錄影、咖啡店各環節的時間紀錄。</li><li>iPad Safari、Android Chrome、macOS Safari、Edge 尚未測試；V2.0 尚待 iPhone Safari 實機驗收。</li><li>Core Web Vitals 尚未量測；螢幕報讀器尚未實測。</li></ul><div class="g2c nx"><a class="kc rv" href="work-site.html" style="--i:0"><span class="k">Case 03</span><h3>個人網站視覺與互動系統</h3><p>設計系統、c 型圓角、動效規格</p><i aria-hidden="true">↗</i></a><a class="kc rv" href="index.html#work" style="--i:1"><span class="k">Portfolio</span><h3>回到精選作品</h3><p>三件作品與互動實驗室</p><i aria-hidden="true">↗</i></a></div></div></section>
+</main>
+<footer><div class="w"><b>Lucius.</b><span>Lucius Rhinesonus · UI／UX 與互動實作</span><span class="fl"><a href="index.html#work">精選作品</a><a href="process.html">實作紀錄</a><a href="#top">回到頂部 ↑</a></span></div></footer>
+<script>
+
+const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)],R=document.documentElement;
+// C 型圓角：依參考圖 c 的曲率輪廓，為每個元素按實際尺寸產生裁切路徑（ResizeObserver 只在尺寸改變時重算）
+const SQ=(()=>{const A=0.18977,B=0.40455,QX=0.58895,QY=0.08722,RH=0.6797,K=1.2,n=v=>Math.round(v*100)/100,
+C=(x,y,e,ux,uy)=>{const vx=-uy,vy=ux,p=(a,b)=>n(x+e*(a*ux+b*vx))+' '+n(y+e*(a*uy+b*vy));return`C${p(A,0)} ${p(B,0)} ${p(QX,QY)}A${n(e*RH)} ${n(e*RH)} 0 0 1 ${p(1-QY,1-QX)}C${p(1,1-B)} ${p(1,1-A)} ${p(1,1)}`},
+P=(w,h,ex,t=0)=>{const m=Math.min(w,h)/2,[e0,e1,e2,e3]=ex.map(v=>Math.max(0,Math.min(v,m)-t)),x0=t,y0=t,x1=w-t,y1=h-t;return`M${n(x1-e1)} ${n(y0)}${C(x1-e1,y0,e1,1,0)}L${n(x1)} ${n(y1-e2)}${C(x1,y1-e2,e2,0,1)}L${n(x0+e3)} ${n(y1)}${C(x0+e3,y1,e3,-1,0)}L${n(x0)} ${n(y0+e0)}${C(x0,y0+e0,e0,0,-1)}Z`},
+// [選擇器, 原圓角(px，單值或四角), 環狀外框粗細(px，選填)]
+L=[['#av',16,1],['#zi',32],['#zs i',33],['#zr',32,1],['.msh b',18],['.avsh b',16],['.fc',20,2,1],['.qz',32,1,1],['.sqsh b',32,0,1],['.ch button',18,0,.5],['.kc',24,0,1],['.kc i',99],['.dc',30,0,1],['.chip',14],['.seg',18,0,.5],['.ph',28,0,1],['.ph .hd em',8],['.mi',18],['#menu button',12],['.rp',26,0,.5],['.rh i',99],['.fd',28],['.cp',24],['.tc',14,1],['.bs',20,2],['.lid',22],['.lp',15],['.tr',13],['.lid em',3],['.btn',99],['.ab',99],['.tabs',99],['.sg',2],['.cps .tkb',2],['.tg',8],['.shot',24,1,1],['.cbx',24,0,1],['.sw',8,1]],
+on=CSS.supports('clip-path','path("M0 0Z")'),
+// 電腦版：視窗 ≥ 820px 起，大面積元件的 c 型圓角隨寬度連續放大（最多 1.3 倍）；手機寬度維持原樣
+dsf=()=>innerWidth>=820?1+.3*Math.min(1,(innerWidth-820)/620):1,sf=o=>1+(DS-1)*(o.wd||0),
+// 細線框在 125%／150% 縮放下對齊整數裝置像素（不再糊成兩格半透明）；手機寬度不變
+snap=t=>innerWidth>=820?Math.max(1,Math.round(t*devicePixelRatio-.01))/devicePixelRatio:t,
+draw=(el,w,h)=>{const o=el._sq,f=sf(o),k=f+'|'+(o.rg?snap(o.t):0);if(!w||!h||(o.w==w&&o.h==h&&o.k==k))return;o.w=w;o.h=h;o.k=k;const e=o.r.map(v=>v*K*f),d=P(w,h,e);el.style.clipPath=`path("${d}")`;if(o.rg)o.rg.style.clipPath=`path(evenodd,"${d}${P(w,h,e,snap(o.t))}")`},
+ro=on&&new ResizeObserver(es=>{for(const x of es){const t=x.target,b=x.borderBoxSize&&x.borderBoxSize[0],w=b?b.inlineSize:t.offsetWidth,h=b?b.blockSize:t.offsetHeight;t._sq.fw=w;t._sq.fh=h;draw(t,w,h)}}),els=[],
+scan=(root=document)=>{if(!on)return;L.forEach(([s,r,t,wd])=>root.querySelectorAll(s).forEach(el=>{if(el._sq)return;el._sq={r:Array.isArray(r)?r:[r,r,r,r],t,wd:wd||0};if(t){const i=document.createElement('i');i.className='rg';i.setAttribute('aria-hidden','true');el.append(i);el._sq.rg=i}el.dataset.sq='';els.push(el);ro.observe(el,{box:'border-box'})}))};
+let DS=dsf();addEventListener('resize',()=>{DS=dsf()});
+if(on){R.classList.add('sq');scan()}
+return{on,P,K,snap,ext:el=>el&&el._sq?el._sq.r.map(v=>v*K*sf(el._sq)):null,scan,draw:(el,w,h)=>{if(on&&el._sq)draw(el,w,h)},all:()=>{if(!on)return;DS=dsf();const z=els.map(el=>{if(!el.isConnected)return null;const o=el._sq,W=el.offsetWidth,H=el.offsetHeight;return[o.fw&&Math.round(o.fw)==W?o.fw:W,o.fh&&Math.round(o.fh)==H?o.fh:H]});els.forEach((el,i)=>z[i]&&draw(el,z[i][0],z[i][1]))},path:(w,h,r)=>`path("${P(w,h,[r,r,r,r].map(v=>v*K))}")`}})();
+// 動畫工具：貝茲曲線、逐格補間；動畫期間逐格同步所有 c 型輪廓（不依賴 ResizeObserver 的時機）
+const bz=(x1,y1,x2,y2)=>{const a=(p,q)=>1-3*q+3*p,b=(p,q)=>3*q-6*p,c=p=>3*p,v=(t,p,q)=>((a(p,q)*t+b(p,q))*t+c(p))*t,s=(t,p,q)=>3*a(p,q)*t*t+2*b(p,q)*t+c(p);return x=>{if(x<=0)return 0;if(x>=1)return 1;let t=x;for(let i=0;i<8;i++){const d=s(t,x1,x2);if(Math.abs(d)<1e-6)break;t-=(v(t,x1,x2)-x)/d}return v(t,y1,y2)}};
+const tween=(dur,ease,fn,done)=>{const t0=performance.now();let id=0,live=1;const f=now=>{if(!live)return;const p=Math.min(1,(now-t0)/dur);fn(ease(p));if(p<1)id=requestAnimationFrame(f);else{live=0;done&&done()}};id=requestAnimationFrame(f);return()=>{live=0;cancelAnimationFrame(id)}};
+let FR=null,kU=0,kR=0;const kick=ms=>{kU=Math.max(kU,performance.now()+ms);if(!kR){kR=1;const f=()=>{SQ.all();FR&&FR.place();performance.now()<kU?requestAnimationFrame(f):kR=0};requestAnimationFrame(f)}};
+const EZ=bz(.4,0,.2,1),PE=bz(.3,1.15,.5,1),SE=bz(.3,.08,.2,1);
+// 捲動驅動：站內所有捲動共用；每格以絕對位置設定（不回讀版面、不累積誤差），使用者一觸碰或滾動就交還控制
+let sStop=null;const stopS=()=>{if(sStop){sStop();sStop=null}};['touchstart','wheel'].forEach(v=>addEventListener(v,stopS,{passive:true}));
+const scrollY2=y=>{stopS();const max=Math.max(0,R.scrollHeight-innerHeight),y1=Math.max(0,Math.min(Math.round(y),max)),y0=scrollY,d=y1-y0;if(Math.abs(d)<1)return;const D=Math.min(950,Math.max(420,300+Math.abs(d)*.16));sStop=tween(D,SE,e=>scrollTo(0,Math.round(y0+d*e)),()=>{sStop=null})};
+// 滑塊：每個分段控制一個 SVG，逐格改寫路徑（任何瀏覽器都會正確重繪）；前緣快、後緣慢，形成不越界的液態拉伸
+const NS='http://www.w3.org/2000/svg',LE=bz(.25,.9,.3,1),TE=bz(.55,0,.25,1);
+let PLn=0;const PL=box=>{if(box._pl)return box._pl;const s=document.createElementNS(NS,'svg'),sh=document.createElementNS(NS,'path'),fg=document.createElementNS(NS,'path'),gr=document.createElementNS(NS,'g'),df=document.createElementNS(NS,'defs'),fl=document.createElementNS(NS,'filter'),gb=document.createElementNS(NS,'feGaussianBlur'),fid='mb'+(++PLn);s.setAttribute('class','pls');s.setAttribute('aria-hidden','true');sh.setAttribute('class','psh');fg.setAttribute('class','pfg');fl.setAttribute('id',fid);[['x','-30%'],['y','-15%'],['width','160%'],['height','130%'],['color-interpolation-filters','sRGB']].forEach(([k,v])=>fl.setAttribute(k,v));gb.setAttribute('stdDeviation','0 0');fl.append(gb);df.append(fl);gr.append(sh,fg);s.append(df,gr);const old=box.querySelector(':scope>.pl');old?old.replaceWith(s):box.prepend(s);return box._pl={s,sh,fg,gr,gb,fid,box,r:box.id=='lk'||box.classList.contains('tabs')?99:14,x:null,w:0,y:0,h:0}};
+const pdraw=(o,x,y,w,h)=>{o.x=x;o.w=w;o.y=y;o.h=h;const tx=o.r<99&&SQ.ext(o.box);o.rr=tx?Math.max(4,tx[0]/SQ.K-4):o.r;const e=SQ.K*o.rr,d=SQ.P(w,h,[e,e,e,e]);o.fg.setAttribute('d',d);o.fg.setAttribute('transform',`translate(${x.toFixed(2)} ${y.toFixed(2)})`);o.sh.setAttribute('d',d);o.sh.setAttribute('transform',`translate(${x.toFixed(2)} ${(y+1).toFixed(2)})`)};
+const mv=(box,b,inst)=>{if(!box||!b)return;const o=PL(box),L=b.offsetLeft,T=b.offsetTop,W=b.offsetWidth,Hh=b.offsetHeight;o.stop&&o.stop();o.gr.removeAttribute('filter');if(inst||o.x==null||!o.w){pdraw(o,L,T,W,Hh);return}
+const l0=o.x,r0=o.x+o.w,t0=o.y,h0=o.h,rt=L>l0;
+let pc=(l0+r0)/2;const mb=v=>{const d=Math.min(5,v*.22);if(d>.35){o.gb.setAttribute('stdDeviation',d.toFixed(2)+' 0');o.gr.setAttribute('filter',`url(#${o.fid})`)}else o.gr.removeAttribute('filter')};
+o.stop=tween(440,q=>q,q=>{const fa=LE(q),fb=TE(q),l=rt?l0+(L-l0)*fb:l0+(L-l0)*fa,r=rt?r0+(L+W-r0)*fa:r0+(L+W-r0)*fb,c=(l+r)/2;mb(Math.abs(c-pc));pc=c;pdraw(o,l,t0+(T-t0)*fa,Math.max(r-l,8),h0+(Hh-h0)*fa)},()=>{o.stop=null;o.gr.removeAttribute('filter');pdraw(o,L,T,W,Hh)})};
+// 鍵盤聚焦框
+FR=(()=>{const s=document.createElementNS(NS,'svg'),p=document.createElementNS(NS,'path');s.id='fr';s.setAttribute('aria-hidden','true');s.append(p);document.body.append(s);R.classList.add('fr');let t=null;
+const place=()=>{if(!t||!t.isConnected){s.style.display='none';return}const el=t.classList.contains('rh')?t.closest('.rp'):t,r=el.getBoundingClientRect(),fx=!!el.closest('header'),g=3,w=r.width+g*2,h=r.height+g*2,pl=el.parentElement&&el.parentElement._pl,rr=pl?(pl.rr??pl.r):el.classList.contains('bx')?20:10,ex=SQ.ext(el)||[rr,rr,rr,rr].map(v=>v*SQ.K),e=ex.map(v=>Math.min(v,Math.min(r.width,r.height)/2)+g);
+s.style.position=fx?'fixed':'absolute';s.style.left=(r.left-g+(fx?0:scrollX))+'px';s.style.top=(r.top-g+(fx?0:scrollY))+'px';s.setAttribute('width',w);s.setAttribute('height',h);p.setAttribute('d',SQ.P(w,h,e)+SQ.P(w,h,e,SQ.snap(2)));s.style.display='block'};
+addEventListener('focusin',e=>{let v=false;try{v=e.target.matches(':focus-visible')}catch(x){v=true}t=v?e.target:null;place()});addEventListener('focusout',()=>{t=null;place()});addEventListener('resize',place);addEventListener('scroll',()=>{t&&place()},{passive:true});
+return{place}})();
+// 按壓回饋：指標按下即縮放（iOS 的 :active 需要觸控監聽才會生效）
+addEventListener('touchstart',()=>{},{passive:true});
+addEventListener('resize',()=>kick(500));
+addEventListener('pointerdown',e=>{const t=e.target.closest('.press,.kc,.bx,.rh,.tc,#av');if(!t||t.disabled)return;t.classList.add('dn');const up=()=>{t.classList.remove('dn');removeEventListener('pointerup',up);removeEventListener('pointercancel',up)};addEventListener('pointerup',up);addEventListener('pointercancel',up)},{passive:true});
+// 進場
+const io=new IntersectionObserver(es=>es.forEach(x=>{if(x.isIntersecting){const t=x.target;t.classList.add('in');setTimeout(()=>t.classList.add('done'),1800);io.unobserve(t)}}),{threshold:.12});$$('.rv').forEach(e=>io.observe(e));setTimeout(()=>$('.hero').classList.add('in'),80);
+
+// 案例頁導覽：目前頁面的位置以既有的滑塊標示
+const LK=$('#lk'),la=$('#lk a.on'),pl=()=>{if(la&&LK.offsetParent){PL(LK).s.style.opacity=1;mv(LK,la,1)}};document.readyState=='complete'?pl():addEventListener('load',pl);addEventListener('resize',pl);document.fonts&&document.fonts.ready.then(pl);
+</script></body></html>
