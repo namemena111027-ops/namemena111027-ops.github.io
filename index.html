@@ -483,6 +483,43 @@ footer .fl{display:flex;flex-wrap:wrap;gap:6px 16px}
 .sk .tape{fill:#f2e2b3}
 .sk .tp{fill:#3a2f1c}
 .sk .tp2{fill:#6b5a3a}
+
+/* ===== V2.2 ===== */
+/* 陰影完整呈現：每一層模糊陰影都完整落在自己的方框內，而它的外層方框也完整包住它。
+   Safari 在某些狀態下（例如元件剛浮現、仍是獨立圖層時）只重繪外層方框以內的範圍，方框外的陰影就被切成直角；
+   改為「外層預留陰影空間＋負邊距抵銷」，版面位置、陰影大小與模糊程度都不變。 */
+.qzw{--qg:22px;padding:44px var(--qg) 64px;margin:-22px calc(-1 * var(--qg)) -64px;pointer-events:none}
+.qzw>.qz{pointer-events:auto}
+.sqsh{inset:0}
+.sqsh b{inset:54px calc(var(--qg) + 10px)}
+.avw{--ap:14px;padding:14px var(--ap) 17px;margin:-14px calc(-1 * var(--ap)) -17px;pointer-events:none}
+.avw>#av{pointer-events:auto}
+.avsh{inset:3px 0 0}
+.avsh b{inset:14px var(--ap)}
+/* 左右預留的空間不超過該寬度下的頁面邊距（22／16／12px），不會產生橫向捲動 */
+@media (max-width:360px){.qzw{--qg:16px}}
+@media (max-width:300px){.qzw{--qg:12px}.avw{--ap:12px}}
+#menu{padding:33px 33px 41px;margin:-33px -33px -41px;min-width:calc(190px + 66px);transform-origin:calc(100% - 33px) calc(100% - 41px)}
+#menu.open{pointer-events:none}
+#menu.open .mi{pointer-events:auto}
+.msh,.msh.t{inset:0}
+.msh b{inset:41px 33px 33px}
+.msh.t b{inset:34px 33px 40px}
+/* 題卡陰影：同一個模糊只算一次並存成圖片，卡片長高時只拉伸中段（圖片無法產生時，維持原本即時模糊的陰影） */
+.sqsh.img{filter:none}
+.sqsh.img>b{display:none}
+/* 展開／收合時圓角不延遲：大型卡片的 c 型輪廓畫在內容後方的底層，不再裁切整張卡片。
+   被裁切的卡片若有子元素正在動畫，Chrome 必須另建遮罩圖層並逐格重繪，遮罩來不及時那一格的角就是方的；底層形狀沒有這個問題。
+   輪廓幾何、尺寸與每一格的同步方式都不變。 */
+.sqb{position:absolute;inset:0;z-index:-1;pointer-events:none;background:var(--cd)}
+.sq [data-sqb]{background:transparent!important;isolation:isolate}
+/* 題卡標題區只在深色模式有底色（需要與卡片相同的 c 型上緣）；淺色模式沒有底色，不裁切，底線維持原樣 */
+@media (prefers-color-scheme:light){.sq .qh{clip-path:none!important}}
+/* 報告展開／收合：整段動畫期間都在畫面外的段落不做（看不到的）過渡，畫面內的段落動效完全不變 */
+.rp .bd>.nt{transition:none!important}
+/* 題卡的 c 型細線放進底層形狀裡：同樣的輪廓、同樣的顏色，但不再疊在動畫內容上方，不必另建遮罩圖層 */
+.sqb>.rg{opacity:1;background:rgba(0,0,0,.06)}
+@media (prefers-color-scheme:dark){.sqb>.rg{background:rgba(255,255,255,.07)}}
 </style></head><body>
 <a class="skip" href="#main">跳至主要內容</a>
 <header><i id="bar"></i><div class="hb"><b>Lucius.</b><div id="lk"><i class="pl" id="pill"></i><a href="#work">精選作品</a><a href="#playground">互動實驗室</a><a href="#exploration">概念練習</a><a href="#research">UX 報告</a><a href="process.html">實作紀錄</a></div><a class="ab press" href="#about">關於我 ↗</a><button id="mb" aria-label="選單" aria-expanded="false"><i></i><i></i></button></div></header>
@@ -512,7 +549,7 @@ footer .fl{display:flex;flex-wrap:wrap;gap:6px 16px}
 <section id="playground" class="s al"><div class="w"><p class="k rv">A little room to explore</p><h2 class="h2 rv">先動手，<span>再換個角度想。</span></h2><p class="mu rv">把生活裡的線索放上桌。試著分清楚：看到了什麼、猜到了什麼，又想改變什麼。</p>
 <div class="fh rv"><b>探索足跡</b><span><span id="fpc">0</span> / 3 已完成</span></div>
 <div class="fcs rv"><div class="fc">01<b>線索分類</b>分辨觀察與推測</div><div class="fc">02<b>預約操作</b>比較兩種入口</div><div class="fc">03<b>生活案例</b>找到昨天的晚餐</div></div>
-<div class="qzw rv"><i class="sqsh" aria-hidden="true"><b></b></i><div class="qz"><canvas id="cv" hidden></canvas>
+<div class="qzw rv"><i class="sqsh" aria-hidden="true"><b></b></i><div class="qz rvt"><canvas id="cv" hidden></canvas>
 <div class="qh"><p class="k">01 / The evidence desk</p><h2 class="h2">線索工作台<i>.</i></h2><p class="mu sm" style="margin:0">六張卡片，三種判斷。不用搶快，選出這句話的性質。</p>
 <div class="c3"><div><small>01</small><b>觀察</b><span>看得見、可以確認的事實。</span><em>例：測試者沒有點開「管理」選單。</em></div><div><small>02</small><b>推測</b><span>尚待證據支持的解釋。</span><em>例：他可能沒想到修改功能收在選單裡。</em></div><div><small>03</small><b>解法</b><span>針對問題提出的改善構想。</span><em>例：把修改入口直接放在預約卡上。</em></div></div><p class="mu" style="font-size:12.5px;margin:0">依本站案例改寫的分類練習，不是能力測驗；作答不會上傳。上方例句是教學示範，不是已完成的研究結果。</p></div>
 <div class="qq" id="qa"><div id="qb"><p id="qm"></p><div class="sgs"><i class="sg"></i><i class="sg"></i><i class="sg"></i><i class="sg"></i><i class="sg"></i><i class="sg"></i></div><div class="qg">“</div><blockquote id="qt" style="margin-inline:0"></blockquote><p class="mu sm" style="margin-bottom:10px">這句話屬於哪一類？</p>
@@ -572,15 +609,15 @@ const SQ=(()=>{const A=0.18977,B=0.40455,QX=0.58895,QY=0.08722,RH=0.6797,K=1.2,n
 C=(x,y,e,ux,uy)=>{const vx=-uy,vy=ux,p=(a,b)=>n(x+e*(a*ux+b*vx))+' '+n(y+e*(a*uy+b*vy));return`C${p(A,0)} ${p(B,0)} ${p(QX,QY)}A${n(e*RH)} ${n(e*RH)} 0 0 1 ${p(1-QY,1-QX)}C${p(1,1-B)} ${p(1,1-A)} ${p(1,1)}`},
 P=(w,h,ex,t=0)=>{const m=Math.min(w,h)/2,[e0,e1,e2,e3]=ex.map(v=>Math.max(0,Math.min(v,m)-t)),x0=t,y0=t,x1=w-t,y1=h-t;return`M${n(x1-e1)} ${n(y0)}${C(x1-e1,y0,e1,1,0)}L${n(x1)} ${n(y1-e2)}${C(x1,y1-e2,e2,0,1)}L${n(x0+e3)} ${n(y1)}${C(x0+e3,y1,e3,-1,0)}L${n(x0)} ${n(y0+e0)}${C(x0,y0+e0,e0,0,-1)}Z`},
 // [選擇器, 原圓角(px，單值或四角), 環狀外框粗細(px，選填)]
-L=[['#av',16,1],['#zi',32],['#zs i',33],['#zr',32,1],['.msh b',18],['.avsh b',16],['.fc',20,2,1],['.qz',32,1,1],['.sqsh b',32,0,1],['.ch button',18,0,.5],['.kc',24,0,1],['.kc i',99],['.dc',30,0,1],['.chip',14],['.seg',18,0,.5],['.ph',28,0,1],['.ph .hd em',8],['.mi',18],['#menu button',12],['.rp',26,0,.5],['.rh i',99],['.fd',28],['.cp',24],['.tc',14,1],['.bs',20,2],['.lid',22],['.lp',15],['.tr',13],['.lid em',3],['.btn',99],['.ab',99],['.tabs',99],['.sg',2],['.cps .tkb',2],['.tg',8],['.shot',24,1,1],['.cbx',24,0,1],['.sw',8,1]],
+L=[['#av',16,1],['#zi',32],['#zs i',33],['#zr',32,1],['.msh b',18],['.avsh b',16],['.fc',20,2,1],['.qz',32,1,1,'b'],['.qh',[32,32,0,0],0,1,0,2],['.sqsh b',32,0,1],['.ch button',18,0,.5],['.kc',24,0,1],['.kc i',99],['.dc',30,0,1,'b'],['.chip',14],['.seg',18,0,.5],['.ph',28,0,1,'b'],['.ph .hd em',8],['.mi',18],['#menu button',12],['.rp',26,0,.5,'b'],['.rh i',99],['.fd',28],['.cp',24],['.tc',14,1],['.bs',20,2],['.lid',22],['.lp',15],['.tr',13],['.lid em',3],['.btn',99],['.ab',99],['.tabs',99],['.sg',2],['.cps .tkb',2],['.tg',8],['.shot',24,1,1],['.cbx',24,0,1],['.sw',8,1]],
 on=CSS.supports('clip-path','path("M0 0Z")'),
 // 電腦版：視窗 ≥ 820px 起，大面積元件的 c 型圓角隨寬度連續放大（最多 1.3 倍）；手機寬度維持原樣
 dsf=()=>innerWidth>=820?1+.3*Math.min(1,(innerWidth-820)/620):1,sf=o=>1+(DS-1)*(o.wd||0),
 // 細線框在 125%／150% 縮放下對齊整數裝置像素（不再糊成兩格半透明）；手機寬度不變
 snap=t=>innerWidth>=820?Math.max(1,Math.round(t*devicePixelRatio-.01))/devicePixelRatio:t,
-draw=(el,w,h)=>{const o=el._sq,f=sf(o),k=f+'|'+(o.rg?snap(o.t):0);if(!w||!h||(o.w==w&&o.h==h&&o.k==k))return;o.w=w;o.h=h;o.k=k;const e=o.r.map(v=>v*K*f),d=P(w,h,e);el.style.clipPath=`path("${d}")`;if(o.rg)o.rg.style.clipPath=`path(evenodd,"${d}${P(w,h,e,snap(o.t))}")`},
+draw=(el,w,h)=>{const o=el._sq,f=sf(o),k=f+'|'+(o.rg?snap(o.t):0);if(!w||!h||(o.w==w&&o.h==h&&o.k==k))return;o.w=w;o.h=h;o.k=k;const e=o.r.map(v=>v*K*f),d=P(w,h+o.xb,e);(o.bg||el).style.clipPath=`path("${d}")`;if(o.rg)o.rg.style.clipPath=`path(evenodd,"${d}${P(w,h,e,snap(o.t))}")`},
 ro=on&&new ResizeObserver(es=>{for(const x of es){const t=x.target,b=x.borderBoxSize&&x.borderBoxSize[0],w=b?b.inlineSize:t.offsetWidth,h=b?b.blockSize:t.offsetHeight;t._sq.fw=w;t._sq.fh=h;draw(t,w,h)}}),els=[],
-scan=(root=document)=>{if(!on)return;L.forEach(([s,r,t,wd])=>root.querySelectorAll(s).forEach(el=>{if(el._sq)return;el._sq={r:Array.isArray(r)?r:[r,r,r,r],t,wd:wd||0};if(t){const i=document.createElement('i');i.className='rg';i.setAttribute('aria-hidden','true');el.append(i);el._sq.rg=i}el.dataset.sq='';els.push(el);ro.observe(el,{box:'border-box'})}))};
+scan=(root=document)=>{if(!on)return;L.forEach(([s,r,t,wd,md,xb])=>root.querySelectorAll(s).forEach(el=>{if(el._sq)return;el._sq={r:Array.isArray(r)?r:[r,r,r,r],t,wd:wd||0,xb:xb||0};if(t){const i=document.createElement('i');i.className='rg';i.setAttribute('aria-hidden','true');el.append(i);el._sq.rg=i}if(md=='b'){const g=document.createElement('i');g.className='sqb';g.setAttribute('aria-hidden','true');el.append(g);el._sq.bg=g;el.dataset.sqb='';if(el._sq.rg)g.append(el._sq.rg)}el.dataset.sq='';els.push(el);ro.observe(el,{box:'border-box'})}))};
 let DS=dsf();addEventListener('resize',()=>{DS=dsf()});
 if(on){R.classList.add('sq');scan()}
 return{on,P,K,snap,ext:el=>el&&el._sq?el._sq.r.map(v=>v*K*sf(el._sq)):null,scan,draw:(el,w,h)=>{if(on&&el._sq)draw(el,w,h)},all:()=>{if(!on)return;DS=dsf();const z=els.map(el=>{if(!el.isConnected)return null;const o=el._sq,W=el.offsetWidth,H=el.offsetHeight;return[o.fw&&Math.round(o.fw)==W?o.fw:W,o.fh&&Math.round(o.fh)==H?o.fh:H]});els.forEach((el,i)=>z[i]&&draw(el,z[i][0],z[i][1]))},path:(w,h,r)=>`path("${P(w,h,[r,r,r,r].map(v=>v*K))}")`}})();
@@ -611,7 +648,7 @@ addEventListener('touchstart',()=>{},{passive:true});
 addEventListener('resize',()=>kick(500));
 addEventListener('pointerdown',e=>{const t=e.target.closest('.press,.kc,.bx,.rh,.tc,#av');if(!t||t.disabled)return;t.classList.add('dn');const up=()=>{t.classList.remove('dn');removeEventListener('pointerup',up);removeEventListener('pointercancel',up)};addEventListener('pointerup',up);addEventListener('pointercancel',up)},{passive:true});
 // 進場
-const io=new IntersectionObserver(es=>es.forEach(x=>{if(x.isIntersecting){const t=x.target;t.classList.add('in');setTimeout(()=>t.classList.add('done'),1800);io.unobserve(t)}}),{threshold:.12});$$('.rv').forEach(e=>io.observe(e));setTimeout(()=>$('.hero').classList.add('in'),80);
+const io=new IntersectionObserver(es=>es.forEach(x=>{if(x.isIntersecting){const t=x.target.closest('.rv');t.classList.add('in');setTimeout(()=>t.classList.add('done'),1800);io.unobserve(x.target)}}),{threshold:.12});$$('.rv').forEach(e=>io.observe(e.querySelector(':scope>.rvt')||e));setTimeout(()=>$('.hero').classList.add('in'),80);
 // 導覽
 const lk=$$('#lk a'),LK=$('#lk'),bar=$('#bar'),mm=$('#mm'),mb=$('#mb');let cur;
 const act=a=>{if(cur===a)return;const hid=!cur;cur=a;lk.forEach(x=>x.classList.toggle('on',x===a));if(!LK.offsetParent)return;PL(LK).s.style.opacity=a?1:0;if(a)mv(LK,a,hid)};
@@ -633,12 +670,13 @@ const qzh=fn=>{const h0=QZ.offsetHeight;QZ._tw&&QZ._tw();QZ.style.height='';fb.c
 const show=()=>{const q=Q[ord[ix]];qm.innerHTML=`<span>線索 0${ix+1} / 06</span><span>${q[0].replace(' · ','・')}</span>`;$$('.sg').forEach((s,i)=>s.className='sg'+(i<ix?' d':i==ix?' c':''));qt.textContent=q[1];lock=0;fb.classList.remove('show');ch.classList.remove('on');cb.forEach(b=>b.classList.remove('on'));nx.textContent=ix==5?'看整理 →':'下一題 →'};
 const swap=async fn=>{if(swp)return;swp=1;const c=$('#qb'),m=1;let o;if(m){o=c.animate([{opacity:1,transform:'none',filter:'blur(0)'},{opacity:0,transform:'translateX(-28px)',filter:'blur(6px)'}],{duration:170,easing:'ease-in',fill:'forwards'});try{await o.finished}catch(x){}}qzh(fn);const qaOn=!$('#qa').hidden;keepQ(qaOn?$('#qa'):$('#sm'));if(m&&qaOn)c.animate([{opacity:0,transform:'translateX(28px)',filter:'blur(8px)'},{opacity:1,transform:'none',filter:'blur(0)'}],{duration:460,easing:'cubic-bezier(.22,1,.36,1)'});o&&o.cancel();swp=0};
 const cv=$('#cv'),cx=cv.getContext('2d');let ps=[],run=0;
-let bb=null;const loop=()=>{if(bb)cx.clearRect(bb[0],bb[1],bb[2],bb[3]);ps=ps.filter(p=>p.l>0);let a=1e9,b=1e9,c=-1e9,d=-1e9;for(const p of ps){p.x+=p.vx;p.y+=p.vy;p.vy+=.35;p.vx*=.98;p.l-=.02;cx.globalAlpha=Math.max(p.l,0);cx.fillStyle=p.c;cx.beginPath();cx.arc(p.x,p.y,p.r,0,6.28);cx.fill();a=Math.min(a,p.x-p.r);b=Math.min(b,p.y-p.r);c=Math.max(c,p.x+p.r);d=Math.max(d,p.y+p.r)}if(ps.length){bb=[a-2,b-2,c-a+4,d-b+4];requestAnimationFrame(loop)}else{bb=null;run=0;cx.clearRect(0,0,cv.width,cv.height);cv.hidden=true}};
-const burst=(x,y)=>{cv.hidden=false;const r=cv.getBoundingClientRect();if(cv.width!=r.width*2){cv.width=r.width*2;cv.height=r.height*2}for(let i=0;i<32;i++){const a=Math.random()*6.28,s=3+Math.random()*7;ps.push({x:(x-r.left)*2,y:(y-r.top)*2,vx:Math.cos(a)*s,vy:Math.sin(a)*s-4,l:1,r:3+Math.random()*5,c:['#30d158','#0a84ff','#ff9f0a','#bf5af2'][i%4]})}if(!run){run=1;loop()}};
+let bb=null;const loop=()=>{const cp=cv._cp;if(cp){cx.save();cx.clip(cp)}if(bb)cx.clearRect(bb[0],bb[1],bb[2],bb[3]);ps=ps.filter(p=>p.l>0);let a=1e9,b=1e9,c=-1e9,d=-1e9;for(const p of ps){p.x+=p.vx;p.y+=p.vy;p.vy+=.35;p.vx*=.98;p.l-=.02;cx.globalAlpha=Math.max(p.l,0);cx.fillStyle=p.c;cx.beginPath();cx.arc(p.x,p.y,p.r,0,6.28);cx.fill();a=Math.min(a,p.x-p.r);b=Math.min(b,p.y-p.r);c=Math.max(c,p.x+p.r);d=Math.max(d,p.y+p.r)}if(cp)cx.restore();if(ps.length){bb=[a-2,b-2,c-a+4,d-b+4];requestAnimationFrame(loop)}else{bb=null;run=0;cx.save();cx.setTransform(1,0,0,1,0,0);cx.clearRect(0,0,cv.width,cv.height);cx.restore();cv.hidden=true}};
+const burst=(x,y)=>{cv.hidden=false;const r=cv.getBoundingClientRect();{const k=Math.min(3,Math.max(1,devicePixelRatio||1));if(cv.width!=Math.round(r.width*k)){cv.width=Math.round(r.width*k);cv.height=Math.round(r.height*k)}cx.setTransform(k/2,0,0,k/2,0,0);const x=SQ.ext(QZ);cv._cp=x?new Path2D(SQ.P(r.width*2,r.height*2,x.map(v=>v*2))):null}for(let i=0;i<32;i++){const a=Math.random()*6.28,s=3+Math.random()*7;ps.push({x:(x-r.left)*2,y:(y-r.top)*2,vx:Math.cos(a)*s,vy:Math.sin(a)*s-4,l:1,r:3+Math.random()*5,c:['#30d158','#0a84ff','#ff9f0a','#bf5af2'][i%4]})}if(!run){run=1;loop()}};
 cb.forEach((b,i)=>b.onclick=e=>{if(lock)return;lock=1;const q=Q[ord[ix]],ok=i==q[2];ans.push(i);$$('.sg')[ix].classList.add('d');ch.style.setProperty('--pc',ok?'#30d158':'#ff9f0a');ch.classList.add('on');cb.forEach(x=>x.classList.toggle('on',x==b));place(b);$('#ft').innerHTML=`<b>${ok?'答對了':'再想想'}</b>　這句屬於「${NM[q[2]]}」。${q[3]}<span class="fx"><b>為什麼不是另外兩類？</b>${q[4]}</span><span class="fx"><b>還需要什麼證據？</b>${q[5]}</span>`;fb.classList.add('show');if(ok)burst(e.clientX,e.clientY)});
 const QA=()=>{const ok=ans.filter((a,i)=>a==Q[ord[i]][2]).length,wr=ord.map((q,i)=>[q,ans[i],i]).filter(([q,a])=>a!=Q[q][2]),pc={};wr.forEach(([q,a])=>{const k=[Q[q][2],a].sort().join('');pc[k]=(pc[k]||0)+1});const top=Object.entries(pc).sort((a,b)=>b[1]-a[1])[0],PAIR={'01':'觀察 ↔ 推測','12':'推測 ↔ 解法','02':'觀察 ↔ 解法'},TIP={'01':'看到的事實和對原因的猜測，常寫在同一句裡。先把句子拆開：哪一段可以直接確認？哪一段還需要證據？','12':'推測回答「為什麼會這樣」，解法回答「要怎麼改」。先確認原因，再決定做法。','02':'觀察描述現在的狀況，解法描述想做的改變。看看句子是在記錄，還是在提議。'};return`<div class="qr"><p class="k">本次練習進度・重新整理後清除</p><div class="qrs"><div><small>答對</small><b>${ok} / 6</b></div><div><small>最容易混淆</small><b>${top?PAIR[top[0]]:'—'}</b></div></div>`+(wr.length?`<p class="qrh">需要再看的題目（對照上方清單）</p>${wr.map(([q,a,i])=>`<p class="qrw"><b>第 ${i+1} 題　</b>你選「${NM[a]}」，這句屬於「${NM[Q[q][2]]}」。${Q[q][4]}</p>`).join('')}`:'')+`<p class="qrh">學習重點</p><p class="qrt">${top?TIP[top[0]]:'六題全對。下一步可以試著把報告裡的一句推測，改寫成能驗證的問題：要收集什麼資料，才能確認或推翻它？'}</p></div>`};
 const fin=()=>{fp(0);const ok=ans.filter((a,i)=>a==Q[ord[i]][2]).length,sm=$('#sm'),kf=$('#qa').contains(document.activeElement);$('#qa').hidden=true;sm.hidden=false;sm.innerHTML=`<p class="k">A DIFFERENT WAY OF SEEING</p><h3 style="font-size:28px">線索，整理好了。</h3><p class="mu">把觀察和解釋分開，才能知道還缺少什麼證據。答對 ${ok} / 6。</p><ol>${ord.map((q,i)=>`<li style="--i:${i}"><b>${NM[Q[q][2]]}</b>　${Q[q][1]}<small>${ans[i]==Q[q][2]?'✓':'你選了'+NM[ans[i]]}</small></li>`).join('')}</ol>${QA()}<button class="btn press" id="rt">換個順序，再試一次 ↻</button><a class="btn g press" href="#report-2">回到咖啡店報告 ↗</a>`;SQ.scan(sm);if(kf){const h=$('h3',sm);h.tabIndex=-1;h.focus({preventScroll:true})}$('#rt').onclick=async()=>{if(swp)return;swp=1;const kr=sm.contains(document.activeElement);const a=sm.animate([{opacity:1},{opacity:0}],{duration:160,easing:'ease-in',fill:'forwards'});try{await a.finished}catch(x){}ord.sort(()=>Math.random()-.5);ix=0;ans=[];qzh(()=>{sm.hidden=true;$('#qa').hidden=false;show()});a.cancel();keepQ();$('#qb').animate([{opacity:0,transform:'translateY(16px)',filter:'blur(8px)'},{opacity:1,transform:'none',filter:'blur(0)'}],{duration:500,easing:'cubic-bezier(.22,1,.36,1)'});swp=0;if(kr)cb[0].focus({preventScroll:true})}};
 nx.onclick=()=>swap(()=>{ix++;ix<6?show():fin()});show();
+(()=>{const sh=$('.sqsh'),sb=sh&&$('b',sh);if(!sh||!SQ.on)return;const S=18,E=54;let key='';const mk=()=>{const W=sh.offsetWidth,ex=SQ.ext(sb),IN=parseFloat(getComputedStyle(sb).left)||0;if(!W||!ex||!IN)return;const bw=W-2*IN,k=Math.min(2,Math.max(1,devicePixelRatio||1)),e=Math.min(ex[0],bw/2),kk=[W,IN,e.toFixed(2),k].join('|');if(kk==key)return;try{const Ht=2*(e+E)+2,H=Ht+2*E,T=2*E+e,c=document.createElement('canvas');c.width=Math.ceil(W*k);c.height=Math.ceil(H*k);const x=c.getContext('2d'),OFF=20000;x.setTransform(k,0,0,k,0,0);x.shadowColor='rgba(0,0,0,.085)';x.shadowBlur=2*S*k;x.shadowOffsetX=OFF*k;x.translate(IN-OFF,E);x.fill(new Path2D(SQ.P(bw,Ht,[e,e,e,e])));const u=c.toDataURL('image/png'),t=Math.round(T*k);sh.style.borderImage=`url(${u}) ${t} 0 ${t} 0 fill / ${t/k}px 0 ${t/k}px 0 stretch`;sh.classList.add('img');key=kk}catch(z){sh.classList.remove('img')}};new ResizeObserver(mk).observe(sh);addEventListener('resize',mk)})();
 // 預約示範
 // 狀態 st：0 查看預約／1 選擇新時段／2 已完成。每個按鈕只在自己的狀態下有效：快速連點不會重複送出，也不會跳過步驟
 // 資料：目前時段 CUR（不可再選）、預設選取 DEF；「取消」回到修改前的選取；「重新體驗」與切換版本恢復全部初始資料
@@ -665,6 +703,7 @@ const rps=$$('.rp'),tabs=$$('#tabs button');
 const RP=rps.map(r=>({r,pn:$('.pn',r),h:$('.rh',r),bd:$('.pn>div',r)}));let tw=0,us=0;
 ['touchstart','wheel'].forEach(v=>addEventListener(v,()=>us=1,{passive:true}));
 const setOpen=(n,A,a1,inst)=>{const id=++tw,dur=inst?0:760,st=RP.map(o=>o.pn.getBoundingClientRect().height);
+RP.forEach((o,i)=>{if(o.r.classList.contains('open')==(i==n))return;const top=o.r.getBoundingClientRect().top,lim=innerHeight*1.25;[...o.bd.children].forEach(c=>{const y=i==n?top+c.offsetTop:c.getBoundingClientRect().top;c.classList.toggle('nt',y>lim||(i!=n&&c.getBoundingClientRect().bottom<0))});clearTimeout(o.nt);o.nt=setTimeout(()=>o.bd.querySelectorAll(':scope>.nt').forEach(c=>c.classList.remove('nt')),1400)});
 RP.forEach((o,i)=>{o.r.classList.toggle('open',i==n);o.h.setAttribute('aria-expanded',i==n)});tabs.forEach((t,i)=>t.classList.toggle('on',i==n));if(n>=0){mv($('#tabs'),tabs[n],inst);const tb=$('#tabs'),b=tabs[n];if(b.offsetLeft<tb.scrollLeft||b.offsetLeft+b.offsetWidth>tb.scrollLeft+tb.clientWidth)tb.scrollTo({left:b.offsetLeft-8,behavior:inst?'auto':'smooth'})}
 const en=RP.map((o,i)=>i==n?o.bd.offsetHeight:0);RP.forEach((o,i)=>o.pn.style.height=st[i]+'px');
 // 先算出「全部展開／收合完成後」卡片的位置與頁面高度，再決定最終捲動值；過程中只依進度內插，不回讀版面
