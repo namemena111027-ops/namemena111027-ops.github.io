@@ -490,7 +490,12 @@ footer .fl{display:flex;flex-wrap:wrap;gap:6px 16px}
    改為「外層預留陰影空間＋負邊距抵銷」，版面位置、陰影大小與模糊程度都不變。 */
 .qzw{--qg:22px;padding:44px var(--qg) 64px;margin:-22px calc(-1 * var(--qg)) -64px;pointer-events:none}
 .qzw>.qz{pointer-events:auto}
-.sqsh{inset:0}
+/* Fade the shadow to transparent inside the gap before the next section.
+   The wrapper ends 64px below the card; the next heading starts at +34px. */
+.sqsh{inset:0;
+  -webkit-mask-image:linear-gradient(to bottom,#000 calc(100% - 64px),transparent calc(100% - 38px));
+  mask-image:linear-gradient(to bottom,#000 calc(100% - 64px),transparent calc(100% - 38px));
+}
 .sqsh b{inset:54px calc(var(--qg) + 10px)}
 .avw{--ap:14px;padding:14px var(--ap) 17px;margin:-14px calc(-1 * var(--ap)) -17px;pointer-events:none}
 .avw>#av{pointer-events:auto}
