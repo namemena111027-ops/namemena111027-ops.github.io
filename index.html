@@ -711,7 +711,12 @@ const rps=$$('.rp'),tabs=$$('#tabs button');
 const RP=rps.map(r=>({r,pn:$('.pn',r),h:$('.rh',r),bd:$('.pn>div',r)}));let tw=0,us=0;
 ['touchstart','wheel'].forEach(v=>addEventListener(v,()=>us=1,{passive:true}));
 const setOpen=(n,A,a1,inst)=>{const id=++tw,dur=inst?0:760,st=RP.map(o=>o.pn.getBoundingClientRect().height);
-RP.forEach((o,i)=>{if(o.r.classList.contains('open')==(i==n))return;const top=o.r.getBoundingClientRect().top,lim=innerHeight*1.25;[...o.bd.children].forEach(c=>{const y=i==n?top+c.offsetTop:c.getBoundingClientRect().top;c.classList.toggle('nt',y>lim||(i!=n&&c.getBoundingClientRect().bottom<0))});clearTimeout(o.nt);o.nt=setTimeout(()=>o.bd.querySelectorAll(':scope>.nt').forEach(c=>c.classList.remove('nt')),1400)});
+RP.forEach((o,i)=>{if(o.r.classList.contains('open')==(i==n))return;const closing=i!==n;
+[...o.bd.children].forEach(child=>{
+  const bounds=child.getBoundingClientRect();
+  // The incoming report moves as the previous report collapses and the page scrolls.
+  child.classList.toggle('nt',closing&&(bounds.top>innerHeight*1.25||bounds.bottom<0));
+});clearTimeout(o.nt);o.nt=setTimeout(()=>o.bd.querySelectorAll(':scope>.nt').forEach(c=>c.classList.remove('nt')),1400)});
 RP.forEach((o,i)=>{o.r.classList.toggle('open',i==n);o.h.setAttribute('aria-expanded',i==n)});tabs.forEach((t,i)=>t.classList.toggle('on',i==n));if(n>=0){mv($('#tabs'),tabs[n],inst);const tb=$('#tabs'),b=tabs[n];if(b.offsetLeft<tb.scrollLeft||b.offsetLeft+b.offsetWidth>tb.scrollLeft+tb.clientWidth)tb.scrollTo({left:b.offsetLeft-8,behavior:inst?'auto':'smooth'})}
 const en=RP.map((o,i)=>i==n?o.bd.offsetHeight:0);RP.forEach((o,i)=>o.pn.style.height=st[i]+'px');
 // 先算出「全部展開／收合完成後」卡片的位置與頁面高度，再決定最終捲動值；過程中只依進度內插，不回讀版面
