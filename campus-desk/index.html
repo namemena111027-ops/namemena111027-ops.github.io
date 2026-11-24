@@ -1,0 +1,103 @@
+<!doctype html><html lang="zh-Hant"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>集合處｜校園活動</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f8f6ee;color:#182d27;font:16px/1.55 system-ui,sans-serif}main,header,nav{max-width:960px;margin:auto;padding:1rem max(5%,20px)}header{padding-top:3rem;border-bottom:2px solid;color:#163a30}h1{font-size:clamp(2.6rem,8vw,5rem);line-height:1;margin:.3em 0}h2{margin:.3em 0}small,label{display:block}nav{display:flex;gap:.4rem;flex-wrap:wrap}button{cursor:pointer;background:#194739;color:white;border:1px solid #194739;border-radius:.45rem;padding:.65rem .9rem;font:inherit}nav button,button.alt{background:transparent;color:#194739}button[aria-current=true]{background:#194739;color:white}button:disabled{opacity:.6}article,form.panel{padding:1.3rem;background:#fffef8;border:1px solid #c7cabc;border-radius:.7rem;margin:1rem 0}.meta{color:#56675f}.badge{display:inline-block;background:#e6efd4;padding:.2rem .55rem;border-radius:4px}.row{display:flex;gap:.6rem;align-items:center;flex-wrap:wrap}label{margin:.6rem 0}input,textarea{display:block;width:100%;max-width:32rem;font:inherit;border:1px solid #89998c;padding:.65rem;border-radius:.3rem;background:white}ul{padding-left:1.3rem}#msg{position:sticky;top:0;background:#fff1ba;color:#302b17;z-index:2}#msg:not(:empty){padding:.7rem 5%}p{margin:.6rem 0}button:focus-visible,input:focus-visible{outline:3px solid #b65300;outline-offset:3px}article,li{overflow-wrap:anywhere}
+</style><header><small>CAMPUS DESK</small><h1>集合處</h1><p>校園活動報名</p><p id="mode"></p></header><nav aria-label="主要導覽"></nav><div role="status" id="msg"></div><main id="main"></main>
+<script id="model">function initial(){
+  return {next:4,events:[
+    {id:1,title:'把鉛字印在紙上',place:'印刷實習室',time:'12/09（三）13:10',cap:8,open:true},
+    {id:2,title:'校園聲音採集',place:'圖書館前集合',time:'12/11（五）15:20',cap:1,open:true},
+    {id:3,title:'小誌裝訂練習',place:'設計教室 B',time:'12/16（三）13:10',cap:12,open:false}
+  ],rows:[{event:2,user:'sample',alias:'示範學生',note:''}]};
+}
+function apply(s,user,admin,a){
+  function field(key,max,required=true){
+    const v=String(a[key]??'').trim();
+    if(v.length>max || (required&&!v)) throw Error('請檢查欄位長度與必填資料。');
+    return v;
+  }
+  function capacity(){const v=Number(a.cap);if(!Number.isInteger(v)||v<1||v>999)throw Error('名額須介於 1 至 999。');return v}
+  if(['create','capacity','toggle'].includes(a.type)&&!admin) throw Error('請先登入主辦端。');
+  if(a.type==='create'){
+    const item={id:s.next,title:field('title',48),place:field('place',48),time:field('time',48),cap:capacity(),open:true};
+    s.events.push(item);s.next++;return '活動已開放報名。';
+  }
+  const e=s.events.find(e=>e.id===Number(a.event));
+  if(!e)throw Error('找不到這場活動。');
+  const list=s.rows.filter(r=>r.event===e.id),mine=list.find(r=>r.user===user);
+  if(a.type==='capacity'){
+    const cap=capacity();if(cap<Math.min(list.length,e.cap))throw Error('名額不可低於現有正取人數。');
+    e.cap=cap;return '名額已更新，候補順序已同步。';
+  }
+  if(a.type==='toggle'){e.open=!!a.open;return e.open?'已開放報名。':'已暫停新報名。'}
+  if(a.type==='join'){
+    if(mine)throw Error('你已經報名，請到我的報名查看。');
+    if(!e.open)throw Error('主辦者已暫停報名。');
+    s.rows.push({event:e.id,user,alias:field('alias',24),note:field('note',100,false)});
+    return list.length<e.cap?'報名成功，你已取得名額。':'已加入候補，可在我的報名查看順位。';
+  }
+  if(!mine)throw Error('找不到你的報名。');
+  if(a.type==='edit'){const alias=field('alias',24),note=field('note',100,false);Object.assign(mine,{alias,note});return '已儲存修改，順位保留。'}
+  if(a.type==='cancel'){s.rows=s.rows.filter(r=>r!==mine);return '已取消，名額與候補順序已更新。'}
+  throw Error('無法辨識操作。');
+}
+function view(s,user,admin){
+  return s.events.map(e=>{
+    const list=s.rows.filter(r=>r.event===e.id);
+    const entries=list.map((r,i)=>({alias:r.alias,note:r.note,status:i<e.cap?'正取':'候補 '+(i-e.cap+1)}));
+    return {...e,count:list.length,mine:entries[list.findIndex(r=>r.user===user)]||null,roster:admin?entries:[]};
+  });
+}</script>
+<script>
+const remote=location.pathname==='/' && location.protocol!=='file:' && document.documentElement.hasAttribute('data-server');
+const key='campus-desk-demo-v1', $=s=>document.querySelector(s), main=$('#main');
+let tab='活動一覽',admin=false,user='student-a',events=[],editing=null,confirmId=null,busy=false;
+function escapeHTML(s){return String(s??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]))}
+const h=escapeHTML;
+function read(){const raw=localStorage.getItem(key);return raw?JSON.parse(raw):initial()}
+async function api(a){
+ if(remote){const r=await fetch('/api',{method:a?'POST':'GET',headers:a?{'Content-Type':'application/json'}:{},body:a?JSON.stringify(a):undefined});const d=await r.json();if(!r.ok)throw Error(d.error||'連線失敗');events=d.events;admin=d.admin;return d.message}
+ const op=()=>{const s=read();let message='';if(a){message=apply(s,user,admin,a);localStorage.setItem(key,JSON.stringify(s))}events=view(s,user,admin);return message};
+ return a&&navigator.locks?await navigator.locks.request(key,op):op();
+}
+function field(k,title,value='',max=48){return '<label>'+title+'<input name="'+k+'" maxlength="'+max+'" value="'+h(value)+'" '+(k==='note'?'':'required')+'></label>'}
+function cap(v){return '<label>活動名額<input type="number" name="cap" min="1" max="999" value="'+v+'" required></label>'}
+function btn(t,label,id){return '<button type="button" data-action="'+t+'" data-id="'+id+'">'+label+'</button>'}
+function form(t,id,body,label){return '<form class="panel" data-type="'+t+'" data-id="'+id+'">'+body+'<button>'+label+'</button></form>'}
+function render(){
+ $('nav').innerHTML=['活動一覽','我的報名','主辦管理'].map(t=>'<button data-tab="'+t+'" aria-current="'+(tab===t)+'">'+t+'</button>').join('');
+ $('#mode').textContent=remote?'多人共用版 · 使用原瀏覽器管理自己的報名':'單機示範 · 資料存於此瀏覽器，可切換兩位模擬學生';
+ let out='<h2>'+tab+'</h2>';
+ if(!remote&&tab!=='主辦管理')out+='<div class="row">目前身分　'+(user==='student-a'?'學生甲':'學生乙')+btn('switch','切換學生',0)+'</div>';
+ if(tab==='主辦管理'&&!admin){
+ main.innerHTML=out+(remote?form('login',0,'<label>主辦密碼<input name="password" type="password" required autocomplete="current-password"></label>','登入'):btn('demoAdmin','進入示範管理台',0));return}
+ if(tab==='主辦管理')out+=btn('logout','離開管理台',0)+form('create',0,field('title','新活動名稱')+field('time','日期與時間')+field('place','集合地點')+cap(12),'建立活動');
+ const visible=tab==='我的報名'?events.filter(e=>e.mine):events;
+ if(!visible.length)out+='<p>目前沒有報名紀錄。到活動一覽選一場想參加的活動。</p>';
+ for(const e of visible){
+ out+='<article><small>'+h(e.time)+'　／　'+h(e.place)+'</small><h2>'+h(e.title)+'</h2><p class="meta">名額 '+e.cap+' 人 · 正取 '+Math.min(e.cap,e.count)+' 人 · 候補 '+Math.max(0,e.count-e.cap)+' 人</p>';
+ if(tab==='主辦管理'){
+ out+=btn(e.open?'pause':'resume',e.open?'暫停報名':'開放報名',e.id)+form('capacity',e.id,cap(e.cap),'更新名額')+'<h3>報名名單</h3>'+(e.roster.length?'<ul>'+e.roster.map(r=>'<li>'+h(r.status)+'　'+h(r.alias)+'　'+h(r.note)+'</li>').join('')+'</ul>':'<p>尚無人報名。</p>');
+ }else if(editing===e.id){
+ out+=form(e.mine?'edit':'join',e.id,field('alias','報名暱稱',e.mine?.alias,24)+field('note','備註（選填）',e.mine?.note,100),e.mine?'儲存修改':e.count>=e.cap?'確認加入候補':'確認報名')+btn('close','返回',e.id);
+ }else if(e.mine){
+ out+='<p><span class="badge">'+h(e.mine.status)+'</span>　'+h(e.mine.alias)+'</p>'+(confirmId===e.id?'<p>取消後會失去目前順位。</p>'+btn('cancel','確認取消報名',e.id)+' '+btn('close','保留報名',e.id):btn('open','修改報名',e.id)+' '+btn('confirm','取消報名',e.id));
+ }else out+=e.open?btn('open',e.count>=e.cap?'加入候補':'報名活動',e.id):'<p>暫停報名</p>';
+ out+='</article>'}main.innerHTML=out;
+}
+async function run(fn){if(busy)return;busy=true;try{await fn()}catch(e){$('#msg').textContent=e.message}finally{busy=false}}
+async function change(a){const msg=await api(a);editing=confirmId=null;render();$('#msg').textContent=msg}
+document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b||b.type==='submit'&&!b.dataset.tab)return;run(async()=>{
+ $('#msg').textContent='';const id=Number(b.dataset.id),a=b.dataset.action;
+ if(b.dataset.tab){tab=b.dataset.tab;editing=confirmId=null;await api()}
+ if(a==='switch'){user=user==='student-a'?'student-b':'student-a';editing=confirmId=null;await api()}
+ if(a==='open')editing=id;if(a==='confirm')confirmId=id;if(a==='close')editing=confirmId=null;
+ if(a==='demoAdmin'){admin=true;await api()}
+ if(a==='logout'){if(remote)await api({type:'logout'});else admin=false}
+ if(a==='pause'||a==='resume')return change({type:'toggle',event:id,open:a==='resume'});
+ if(a==='cancel')return change({type:'cancel',event:id});render();
+ })});
+document.addEventListener('submit',e=>{e.preventDefault();const f=e.target;run(()=>change({...Object.fromEntries(new FormData(f)),type:f.dataset.type,event:Number(f.dataset.id)}))});
+window.addEventListener('focus',()=>run(async()=>{await api();if(!editing&&!document.activeElement?.closest('form'))render()}));
+window.addEventListener('storage',()=>run(async()=>{await api();if(!editing)render()}));
+run(async()=>{await api();render()});
+</script></html>
