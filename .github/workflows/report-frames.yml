@@ -1,0 +1,16 @@
+name: Report text frames
+on:
+  push:
+    branches: [qa/report-text-reveal]
+permissions:
+  contents: read
+jobs:
+  compare:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - run: git show d464c6a1486d203656a7dc9480fa479d7d82f394:index.html > baseline.html
+      - run: pip install playwright && python -m playwright install --with-deps chromium webkit
+      - run: python tests/report_text_frames.py
