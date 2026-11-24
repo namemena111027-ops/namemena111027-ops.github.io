@@ -58,7 +58,7 @@ async def main():
             txt = await pg.evaluate("navigator.clipboard.readText()")
             chk(f'report {n}: copy link', txt.endswith(f'#report-{n}'), txt[-30:])
             st = await pg.evaluate(f"""(()=>{{const bd=document.querySelector('#report-{n} .bd');const ps=[...bd.querySelectorAll(':scope>p:not(.note)')].map(p=>p.textContent).join('');
-              return{{chars:ps.replace(/\\s/g,'').length,h3:bd.querySelectorAll(':scope>h3').length,fig:!!bd.querySelector(':scope>figure svg'),
+              return{{chars:ps.replace(/\\s/g,'').length,h3:bd.querySelectorAll(':scope>h3').length,fig:!!bd.querySelector(':scope>figure svg, :scope>figure img[alt]'),
               checklist:/待補|未記錄|研究限制|待驗證|研究問題|證據現況/.test(bd.innerText),hidden:[...bd.querySelectorAll('p,h3,figcaption')].filter(e=>{{let x=e,o=1;while(x&&x!==bd){{o*=+getComputedStyle(x).opacity;x=x.parentElement}}return o<.5}}).length}}}})()""")
             chk(f'report {n}: story (800–1400 chars, ≥3 chapters, sketch, no checklist, nothing hidden)', 800 <= st['chars'] <= 1400 and st['h3'] >= 3 and st['fig'] and not st['checklist'] and st['hidden'] == 0, json.dumps(st, ensure_ascii=False))
         r4 = await pg.evaluate("[!!document.querySelector('#report-4 .bd>.fd'),!!document.querySelector('#report-4 .bd>.cp'),document.querySelector('#report-4 .fd').innerText.includes('情境模擬')]")
