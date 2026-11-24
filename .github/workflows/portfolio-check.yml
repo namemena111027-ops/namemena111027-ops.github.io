@@ -1,0 +1,22 @@
+name: Portfolio browser checks
+on:
+  push:
+    branches: [qa/mobile-quiz-regression]
+permissions:
+  contents: read
+jobs:
+  browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install playwright && python -m playwright install --with-deps chromium webkit
+      - name: Run repository browser checks
+        run: |
+          for test in tests/v*_test.py; do
+            python "$test" "$PWD/index.html" | tee -a "$RUNNER_TEMP/results"
+          done
+          ! grep '^FAIL ' "$RUNNER_TEMP/results"
