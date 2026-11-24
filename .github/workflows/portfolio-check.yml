@@ -16,6 +16,7 @@ jobs:
       - run: pip install playwright && python -m playwright install --with-deps chromium webkit
       - name: Run repository browser checks
         run: |
+          set -o pipefail
           for test in tests/v*_test.py; do
             python "$test" "$PWD/index.html" | tee -a "$RUNNER_TEMP/results"
           done
