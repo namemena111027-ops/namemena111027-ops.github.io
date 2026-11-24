@@ -1,0 +1,18 @@
+name: Quiz shadow pixels
+on:
+  push:
+    branches: [qa/quiz-shadow-edge]
+permissions:
+  contents: read
+jobs:
+  pixels:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: pip install playwright pillow && python -m playwright install --with-deps webkit chromium
+      - run: python tests/quiz_shadow_pixels.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: second-question-screenshots
+          path: question-2-*.png
